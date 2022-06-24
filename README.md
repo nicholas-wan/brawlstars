@@ -17,7 +17,7 @@ Hashtag before the tags (#) is not necessary but will be accepted.
 
 A mix of player and club tags can be accepted as well, but players and clubs can share the same tag. Priority would be checking for clubs.
 
-## Player Tag example
+## 1. Player Tag example
 ```
 # Input Player tags with the -t argument, with a space in between tags. More than 1 player tag can be accepted. 
 # e.g python main.py -t PLAYERTAG1 PLAYERTAG2 PLAYERTAG3
@@ -33,7 +33,7 @@ A mix of player and club tags can be accepted as well, but players and clubs can
 # CSV saved to ./output/players.csv
 
 ```
-## Club Tag Example
+## 2. Club Tag Example
 
 ```
 # Input Club tags with the -t argument, with a space in between tags. More than 1 club tag can be accepted. 
@@ -58,7 +58,7 @@ A mix of player and club tags can be accepted as well, but players and clubs can
 
 ```
 
-## Getting Brawler Levels of all players in a specific Club
+## 3. Getting Brawler Levels of all players in a specific Club
 Use the -s argument, with clubs seperated by space
 
 ```
