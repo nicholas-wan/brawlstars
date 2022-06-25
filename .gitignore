@@ -3,3 +3,4 @@ __pycache__
 .DS_Store
 api_key.txt
 /output/*.csv
+.ipynb_checkpoints
