@@ -164,7 +164,7 @@ def get_player_stats(playertag):
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--tags', '-t', nargs="+", default=['2YQUPUYJ'], type=str, help='input brawl stars tags, seperated by a space')
-    parser.add_argument('--save_club_csv', '-s' nargs="+", default=['202VGURG0','90JC22UQ'], type=str, help='Enter club tags seperated by space for specfic clubs you want to save the CSV for')
+    parser.add_argument('--save_club_csv', '-s', nargs="+", default=['202VGURG0','90JC22UQ'], type=str, help='Enter club tags seperated by space for specfic clubs you want to save the CSV for')
     args = parser.parse_args()
     
     player_tags, club_tags, invalid_tags = classify_tags(args.tags)
