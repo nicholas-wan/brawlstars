@@ -48,6 +48,16 @@ def valid_club_tag(tag):
     except:
         return False
 
+def clean_string(s):
+    """
+    params: s - string of brawlers joined by ', '
+    output: cleaned string
+    """
+    try:
+        return s.replace('\n',' ').replace('\\n',' ')
+    except:
+        return s
+
 def classify_tags(tags):
     """
     # Playertags and Clubtags might be the same. Checks for clubtags as priority
@@ -62,13 +72,13 @@ def classify_tags(tags):
     for tag in tags:
         if valid_club_tag(tag):
             club_tags.append(tag)
-        elif valid_player_tag(tag):
+        if valid_player_tag(tag):
             player_tags.append(tag)
         else:
             invalid_tags.append(tag)
     return player_tags, club_tags, invalid_tags
 
-def get_club_stats(clubtag, save_club_csv):
+def get_club_stats(clubtag, save_club_csv, truncate_num, include_tens, include_date):
     """
     params: clubtag (string) e.g #202VGURG0
     output: res (dataframe), csv - writes to CSV file (Only for MK1 and MK2)
@@ -111,14 +121,13 @@ def get_club_stats(clubtag, save_club_csv):
         for col in res.columns:
             if col not in avoid_cols:
                 if temp_df[col]==11:
-                    player_eleven_list.append(col)
+                    player_eleven_list.append(clean_string(col))
                 if temp_df[col]==10:
-                    player_ten_list.append(col)
-        player_ten_list, player_eleven_list = sorted(player_ten_list), sorted(player_eleven_list)
+                    player_ten_list.append(clean_string(col))
+        player_ten_list, player_eleven_list = shorten_brawler_string(sorted(player_ten_list), truncate_num), shorten_brawler_string(sorted(player_eleven_list), truncate_num)
         club_ten_list.append(player_ten_list)
         club_eleven_list.append(player_eleven_list)
 
-    club_ten_list, club_eleven_list = [', '.join(x) for x in club_ten_list], [', '.join(x) for x in club_eleven_list]
     res['brawlers_10'], res['brawlers_11'] = club_ten_list, club_eleven_list
 
     res['date'] = today.strftime("%m/%d/%y")
@@ -128,6 +137,12 @@ def get_club_stats(clubtag, save_club_csv):
     valid_characters = string.ascii_letters + string.digits
     res['player'] = res['player'].map(lambda x: ''.join(ch for ch in x if ch in valid_characters).lower())
     res = res.sort_values(by=['player']).reset_index(drop=True)
+
+    if include_tens=='no':
+        res = res.drop('brawlers_10', axis=1)
+
+    if include_date=='no':
+        res = res.drop('date', axis=1)
 
     if clubtag in save_club_csv:
         res.to_csv('./output/'+club.name+'_brawler_levels.csv', index=False)
@@ -143,7 +158,17 @@ def get_club_stats(clubtag, save_club_csv):
                  }
     return stats_dict
     
-def get_player_stats(playertag):
+def shorten_brawler_string(brawler_list, truncate_num):
+    """
+    params: brawler_list (list[string])
+    output: brawler_string (string), comma seperated
+    """
+    if len(brawler_list) > truncate_num:
+        return ', '.join(brawler_list[:truncate_num])+', ...'
+    else:
+        return', '.join(brawler_list)
+
+def get_player_stats(playertag, truncate_num):
     """
     params: playertag (string) e.g #202VGURG0
     output: res_df (dataframe)
@@ -156,15 +181,19 @@ def get_player_stats(playertag):
     res = {}
     res['player'], res['tag'], res['trophies'] = player.name, playertag, player.trophies
     res['level_9s'], res['level_10s'], res['level_11s'] = len(nines), len(tens), len(elevens)
-    res['brawlers_10'], res['brawlers_11'] = ', '.join(tens), ', '.join(elevens)
+    res['brawlers_10'], res['brawlers_11'] = shorten_brawler_string(tens, truncate_num), shorten_brawler_string(elevens, truncate_num)
     res_df = pd.DataFrame(res, index=[0])
     
     return res_df
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--tags', '-t', nargs="+", default=['2YQUPUYJ'], type=str, help='input brawl stars tags, seperated by a space')
+    parser.add_argument('--tags', '-t', nargs="+", default=['202VGURG0', '90JC22UQ'], type=str, help='python -i main.py -t 2YQUPUYJ')
     parser.add_argument('--save_club_csv', '-s', nargs="+", default=['202VGURG0','90JC22UQ'], type=str, help='Enter club tags seperated by space for specfic clubs you want to save the CSV for')
+    parser.add_argument('--truncate',  default=10, type=int, help='yes to only list the top X brawlers, else list all')
+    parser.add_argument('--include_tens', '-i',  default='no', type=str, choices=['yes','no'], help='yes to include the list of each members lv 10 brawlers')
+    parser.add_argument('--include_date', '-id',  default='no', type=str, choices=['yes','no'], help='yes to include date as a column')
+
     args = parser.parse_args()
     
     player_tags, club_tags, invalid_tags = classify_tags(args.tags)
@@ -177,10 +206,16 @@ if __name__=='__main__':
         print('======================================')
         player_df = []
         for playertag in player_tags:
-            player_df.append(get_player_stats(playertag))
-        player_df = pd.concat(player_df).sort_values(by=['trophies'], ascending=False).reset_index(drop=True)
-        player_df.to_csv('./output/players.csv', index=False)
-        print(player_df)
+            try:
+                player_df.append(get_player_stats(playertag, args.truncate))
+            except:
+                print('Error for Clubtag:', clubtag)
+        if len(player_df)>0:
+            player_df = pd.concat(player_df).sort_values(by=['trophies'], ascending=False).reset_index(drop=True)
+            if args.include_tens=='no':
+                player_df = player_df.drop('brawlers_10', axis=1)
+            player_df.to_csv('./output/players.csv', index=False)
+            print(player_df)
         #print(player_df.drop(['brawlers_10'], axis=1).to_markdown(tablefmt="pretty"))
 
     if len(club_tags)>0:
@@ -190,11 +225,15 @@ if __name__=='__main__':
 
         stats_dict_list = []
         for clubtag in club_tags:
-            stats_dict_list.append(get_club_stats(clubtag, args.save_club_csv))
-
-        compare_stats = pd.DataFrame(stats_dict_list)
-        compare_stats = compare_stats.sort_values(by=['Total Trophies'], ascending=False)
-        compare_stats.to_csv('./output/comparison.csv', index=False)
-        print(compare_stats.to_markdown(tablefmt="pretty"))
+            try:
+                stats_dict_list.append(get_club_stats(clubtag, args.save_club_csv, args.truncate, args.include_tens, args.include_date))
+            except:
+                print('Error for Clubtag:', clubtag)
+        
+        if len(stats_dict_list)>0:
+            compare_stats = pd.DataFrame(stats_dict_list)
+            compare_stats = compare_stats.sort_values(by=['Total Trophies'], ascending=False)
+            compare_stats.to_csv('./output/comparison.csv', index=False)
+            print(compare_stats.to_markdown(tablefmt="pretty"))
 
     print('Complete')

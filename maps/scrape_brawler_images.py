@@ -30,7 +30,7 @@ for i in tqdm(range(len(links))):
     url = links[i] 
     fname = os.path.join('brawler_images',links[i].split('/')[-1])
     res = requests.get(url,headers=headers)
-    with open(fname, 'wb') as f:
-        f.write(res.content)
-
+    if not os.path.exists(fname):
+        with open(fname, 'wb') as f:
+            f.write(res.content)
 print('Complete')

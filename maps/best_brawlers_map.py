@@ -7,7 +7,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--refresh', '-r', choices=['yes','no'], default='no', type=str, help='yes to obtain the latest stats, else no')
-parser.add_argument('--num_best_brawlers', '-n', default=8, type=int, help='Enter the number of best brawlers to find out the statistics for')
+parser.add_argument('--num_best_brawlers', '-n', default=12, type=int, help='Enter the number of best brawlers to find out the statistics for')
 parser.add_argument('--chrome_headless', '-c', choices=['yes','no'], default='yes', type=str, help='yes for headless chrome browser else no')
 parser.add_argument('--min_use_rates', '-m', default=1, type=float, help='minimum use rate. Range from 1-100')
 
@@ -56,6 +56,7 @@ df['map'] = df['url'].map(lambda x: x.split('/')[-1].replace('-',' '))
 best_brawler_list = []
 win_rates_list = []
 use_rates_list = []
+num_brawlers_list = []
 
 for i in tqdm(range(len(df))):
     driver.get(df.iloc[i]['visit_links'])
@@ -69,6 +70,7 @@ for i in tqdm(range(len(df))):
     win_rates, use_rates, mvp_rates = values[::3], values[1::3], values[2::3]
 
     res = pd.DataFrame({'brawlers':brawlers, 'win_rates':win_rates, 'use_rates':use_rates})
+    num_brawlers = len(res)
     res['use_rates'] = res['use_rates'].map(lambda x: float(x.replace('%','')))
     res = res[res['use_rates']>min_use_rates].reset_index(drop=True)
     res['use_rates'] = res['use_rates'].map(lambda x: str(x)+'%')
@@ -76,14 +78,16 @@ for i in tqdm(range(len(df))):
     best_brawler_list.append(list(res.head(num_best_brawlers)['brawlers']))
     win_rates_list.append(list(res.head(num_best_brawlers)['win_rates']))
     use_rates_list.append(list(res.head(num_best_brawlers)['use_rates']))
+    num_brawlers_list.append(num_brawlers)
 
 res_df = df.copy()
 
 res_df['best_brawlers'] = best_brawler_list
 res_df['win_rates'] = win_rates_list
 res_df['use_rates'] = use_rates_list
-    
-res_df = res_df[['gamemodes','map','best_brawlers','win_rates','use_rates']]
+res_df['num_brawlers'] = num_brawlers_list
+
+res_df = res_df[['gamemodes','map','best_brawlers','win_rates','use_rates','num_brawlers']]
 res_df['best_brawlers'] = res_df['best_brawlers'].map(lambda x: ', '.join(x))
 res_df['win_rates'] = res_df['win_rates'].map(lambda x: ', '.join(x))
 res_df['use_rates'] = res_df['use_rates'].map(lambda x: ', '.join(x))
