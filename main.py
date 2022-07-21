@@ -78,7 +78,7 @@ def classify_tags(tags):
             invalid_tags.append(tag)
     return player_tags, club_tags, invalid_tags
 
-def get_club_stats(clubtag, save_club_csv, truncate_num, include_tens, include_date):
+def get_club_stats(clubtag, truncate_num, include_tens, include_date):
     """
     params: clubtag (string) e.g #202VGURG0
     output: res (dataframe), csv - writes to CSV file (Only for MK1 and MK2)
@@ -144,8 +144,7 @@ def get_club_stats(clubtag, save_club_csv, truncate_num, include_tens, include_d
     if include_date=='no':
         res = res.drop('date', axis=1)
 
-    if clubtag in save_club_csv:
-        res.to_csv('./output/'+club.name+'_brawler_levels.csv', index=False)
+    res.to_csv('./output/'+club.name+'_brawler_levels.csv', index=False)
 
     stats_dict = {'Club': club.name,
                   'Club Tag': clubtag,
@@ -189,7 +188,6 @@ def get_player_stats(playertag, truncate_num):
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--tags', '-t', nargs="+", default=['202VGURG0', '90JC22UQ'], type=str, help='python -i main.py -t 2YQUPUYJ')
-    parser.add_argument('--save_club_csv', '-s', nargs="+", default=['202VGURG0','90JC22UQ'], type=str, help='Enter club tags seperated by space for specfic clubs you want to save the CSV for')
     parser.add_argument('--truncate',  default=10, type=int, help='yes to only list the top X brawlers, else list all')
     parser.add_argument('--include_tens', '-i',  default='no', type=str, choices=['yes','no'], help='yes to include the list of each members lv 10 brawlers')
     parser.add_argument('--include_date', '-id',  default='no', type=str, choices=['yes','no'], help='yes to include date as a column')
@@ -226,7 +224,7 @@ if __name__=='__main__':
         stats_dict_list = []
         for clubtag in club_tags:
             try:
-                stats_dict_list.append(get_club_stats(clubtag, args.save_club_csv, args.truncate, args.include_tens, args.include_date))
+                stats_dict_list.append(get_club_stats(clubtag, args.truncate, args.include_tens, args.include_date))
             except:
                 print('Error for Clubtag:', clubtag)
         
