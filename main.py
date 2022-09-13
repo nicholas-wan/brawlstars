@@ -78,6 +78,13 @@ def classify_tags(tags):
             invalid_tags.append(tag)
     return player_tags, club_tags, invalid_tags
 
+def clean_player_name(name):
+    valid_characters = string.ascii_letters + string.digits
+    new_name = ''.join(ch for ch in name if ch in valid_characters).lower()
+    if len(new_name)==0:
+        return name
+    return new_name
+
 def get_club_stats(clubtag, truncate_num, include_tens, include_date):
     """
     params: clubtag (string) e.g #202VGURG0
@@ -130,12 +137,12 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date):
 
     res['brawlers_10'], res['brawlers_11'] = club_ten_list, club_eleven_list
 
+
     res['date'] = today.strftime("%m/%d/%y")
     res = res[avoid_cols]
 
     # Cleans players names to only have ascii_letters and digits
-    valid_characters = string.ascii_letters + string.digits
-    res['player'] = res['player'].map(lambda x: ''.join(ch for ch in x if ch in valid_characters).lower())
+   #res['player'] = res['player'].map(clean_player_name)
     res = res.sort_values(by=['player']).reset_index(drop=True)
 
     if include_tens=='no':
@@ -144,7 +151,8 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date):
     if include_date=='no':
         res = res.drop('date', axis=1)
 
-    res.to_csv('./output/'+club.name+'_brawler_levels.csv', index=False)
+    club_name_cleaned = clean_player_name(club.name)
+    res.to_csv('./output/'+club_name_cleaned+'_brawler_levels.csv', index=False)
 
     stats_dict = {'Club': club.name,
                   'Club Tag': clubtag,
@@ -187,8 +195,8 @@ def get_player_stats(playertag, truncate_num):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--tags', '-t', nargs="+", default=['202VGURG0', '90JC22UQ'], type=str, help='python -i main.py -t 2YQUPUYJ')
-    parser.add_argument('--truncate',  default=10, type=int, help='yes to only list the top X brawlers, else list all')
+    parser.add_argument('--tags', '-t', nargs="+", default=['2GV02VVQR','2GQRRVC20'], type=str, help='python -i main.py -t 2YQUPUYJ')
+    parser.add_argument('--truncate',  default=58, type=int, help='yes to only list the top X brawlers, else list all')
     parser.add_argument('--include_tens', '-i',  default='no', type=str, choices=['yes','no'], help='yes to include the list of each members lv 10 brawlers')
     parser.add_argument('--include_date', '-id',  default='no', type=str, choices=['yes','no'], help='yes to include date as a column')
 
@@ -205,7 +213,8 @@ if __name__=='__main__':
         player_df = []
         for playertag in player_tags:
             try:
-                player_df.append(get_player_stats(playertag, args.truncate))
+                temp_player_df = get_player_stats(playertag, args.truncate)
+                player_df.append(temp_player_df)
             except:
                 print('Error for Clubtag:', clubtag)
         if len(player_df)>0:
@@ -224,7 +233,8 @@ if __name__=='__main__':
         stats_dict_list = []
         for clubtag in club_tags:
             try:
-                stats_dict_list.append(get_club_stats(clubtag, args.truncate, args.include_tens, args.include_date))
+                temp_club_df = get_club_stats(clubtag, args.truncate, args.include_tens, args.include_date)
+                stats_dict_list.append(temp_club_df)
             except:
                 print('Error for Clubtag:', clubtag)
         
