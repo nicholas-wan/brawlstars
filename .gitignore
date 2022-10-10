@@ -4,3 +4,4 @@ __pycache__
 api_key.txt
 /output/*.csv
 .ipynb_checkpoints
+/lambda**

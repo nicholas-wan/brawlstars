@@ -17,6 +17,7 @@ from tqdm import tqdm
 from datetime import date
 import string
 import argparse
+import statistics
 
 today = date.today()
 
@@ -85,7 +86,7 @@ def clean_player_name(name):
         return name
     return new_name
 
-def get_club_stats(clubtag, truncate_num, include_tens, include_date):
+def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, save=False):
     """
     params: clubtag (string) e.g #202VGURG0
     output: res (dataframe), csv - writes to CSV file (Only for MK1 and MK2)
@@ -137,7 +138,6 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date):
 
     res['brawlers_10'], res['brawlers_11'] = club_ten_list, club_eleven_list
 
-
     res['date'] = today.strftime("%m/%d/%y")
     res = res[avoid_cols]
 
@@ -152,7 +152,9 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date):
         res = res.drop('date', axis=1)
 
     club_name_cleaned = clean_player_name(club.name)
-    res.to_csv('./output/'+club_name_cleaned+'_brawler_levels.csv', index=False)
+
+    if clubtag in savelist:
+        res.to_csv('./output/'+club_name_cleaned+'_brawler_levels.csv', index=False)
 
     stats_dict = {'Club': club.name,
                   'Club Tag': clubtag,
@@ -161,7 +163,8 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date):
                   'Avg Trophies': int(sum(res['trophies'])/len(res)),
                   'Avg 9s per member':round(sum(res['level_9s'])/len(res),1),
                   'Avg 10s per member': round(sum(res['level_10s'])/len(res),1),
-                  'Avg 11s per member': round(sum(res['level_11s'])/len(res),1)
+                  'Avg 11s per member': round(sum(res['level_11s'])/len(res),1),
+                  'Stddev 11s': round(statistics.stdev(res['level_11s']),2)
                  }
     return stats_dict
     
@@ -196,9 +199,10 @@ def get_player_stats(playertag, truncate_num):
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--tags', '-t', nargs="+", default=['2GV02VVQR','2GQRRVC20'], type=str, help='python -i main.py -t 2YQUPUYJ')
-    parser.add_argument('--truncate',  default=58, type=int, help='yes to only list the top X brawlers, else list all')
+    parser.add_argument('--truncate',  default=60, type=int, help='yes to only list the top X brawlers, else list all')
     parser.add_argument('--include_tens', '-i',  default='no', type=str, choices=['yes','no'], help='yes to include the list of each members lv 10 brawlers')
     parser.add_argument('--include_date', '-id',  default='no', type=str, choices=['yes','no'], help='yes to include date as a column')
+    parser.add_argument('--savelist', '-s', default=['2GV02VVQR','2GQRRVC20','LULY9VQ'], help='clubs to save CSV for')
 
     args = parser.parse_args()
     
@@ -216,7 +220,7 @@ if __name__=='__main__':
                 temp_player_df = get_player_stats(playertag, args.truncate)
                 player_df.append(temp_player_df)
             except:
-                print('Error for Clubtag:', clubtag)
+                print('Error for PlayerTag:', clubtag)
         if len(player_df)>0:
             player_df = pd.concat(player_df).sort_values(by=['trophies'], ascending=False).reset_index(drop=True)
             if args.include_tens=='no':
@@ -233,7 +237,7 @@ if __name__=='__main__':
         stats_dict_list = []
         for clubtag in club_tags:
             try:
-                temp_club_df = get_club_stats(clubtag, args.truncate, args.include_tens, args.include_date)
+                temp_club_df = get_club_stats(clubtag, args.truncate, args.include_tens, args.include_date, args.savelist, save=False)
                 stats_dict_list.append(temp_club_df)
             except:
                 print('Error for Clubtag:', clubtag)
