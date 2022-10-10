@@ -75,13 +75,23 @@ def map_int(num):
     except:
         return ''
 
-def read_csv(gsheet_url, brawler_levels_csv, output, clubname, color_scheme):
+def truncate_brawlers(s, truncate_brawlers_num):
+    s = s.split(', ')
+    append_str = ''
+    if len(s)>truncate_brawlers_num:
+        append_str = ', ... '
+    return ', '.join(s[:truncate_brawlers_num])+append_str
+
+
+def read_csv(gsheet_url, brawler_levels_csv, output, clubname, color_scheme, truncate_brawlers_num=12):
     df = pd.read_csv(gsheet_url, usecols=[1,2])
     df = df.iloc[1:]
     df.columns=['player','team']
     df = df.dropna(subset=['team'])
     df['player'] = df['player'].map(clean_string)
     brawler_df = pd.read_csv(brawler_levels_csv)
+    brawler_df['brawlers_11'] = brawler_df['brawlers_11'].map(lambda x: truncate_brawlers(x, truncate_brawlers_num))
+
 
     res = brawler_df.merge(df, on='player', how='left')
     na = res[res['team'].isna()]
