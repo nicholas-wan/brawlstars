@@ -196,7 +196,7 @@ def get_player_stats(playertag, truncate_num):
     
     return res_df
 
-if __name__=='__main__':
+if True:
     parser = argparse.ArgumentParser()
     parser.add_argument('--tags', '-t', nargs="+", default=['2GV02VVQR','2GQRRVC20'], type=str, help='python -i main.py -t 2YQUPUYJ')
     parser.add_argument('--truncate',  default=60, type=int, help='yes to only list the top X brawlers, else list all')
@@ -205,8 +205,10 @@ if __name__=='__main__':
     parser.add_argument('--savelist', '-s', default=['2GV02VVQR','2GQRRVC20','LULY9VQ'], help='clubs to save CSV for')
 
     args = parser.parse_args()
-    
-    player_tags, club_tags, invalid_tags = classify_tags(args.tags)
+    tags_to_parse = args.tags
+    tags_to_parse = [x.rstrip().lstrip().replace(',','') for x in tags_to_parse]
+
+    player_tags, club_tags, invalid_tags = classify_tags(tags_to_parse)
     if len(invalid_tags)>0:
         print('Invalid Tags detected. Please check: ', invalid_tags)
 

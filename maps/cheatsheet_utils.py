@@ -170,10 +170,10 @@ def get_best_brawlers_map():
     df['win_rates'] = df['win_rates'].map(clean_string)
     df['win_rates'] = df['win_rates'].map(round_string)
     df['win_rates'] = df['win_rates'].map(lambda s: nth_repl(s, ", ","<br>",best_brawlers/3))
-    df['use_rates'] = df['use_rates'].map(clean_string)
-    df['use_rates'] = df['use_rates'].map(lambda s: nth_repl(s, ", ","<br>",best_brawlers/3))
+    df['usage_rank'] = df['usage_rank'].map(clean_string)
+    df['usage_rank'] = df['usage_rank'].map(lambda s: nth_repl(s, ", ","<br>",best_brawlers/3))
     df = df.rename(columns={"num_brawlers": "n"})
-    df = df[['gamemodes','map']+columns+['win_rates','use_rates','n','filter']]
+    df = df[['gamemodes','map']+columns+['win_rates','usage_rank','n','filter']]
     df.index += 1
 
     for col in columns+['gamemodes']:
@@ -263,7 +263,6 @@ def write_to_html_file(df, title='', filename='out.html'):
     tbody tr:nth-child(odd) {
       background: #f5f5f5;
     }
-
 </style>
 </head>
 <body>

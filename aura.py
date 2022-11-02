@@ -6,6 +6,7 @@ import string
 import argparse
 import requests
 import time
+from pandasql import sqldf
 
 c9_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=1839516291'
 c9_brawlers_csv = 'output/c9aurac_brawler_levels.csv'
@@ -110,5 +111,35 @@ def read_csv(gsheet_url, brawler_levels_csv, output, clubname, color_scheme, tru
 color_scheme = ["#951F06", "#f8dcdc"]
 df1, na1  = read_csv(c9_sheet, c9_brawlers_csv, c9_output, 'C9', color_scheme)
 
+team1_q = """
+select team,
+       sum(trophies)/count(trophies) as avg_trophies,
+       sum(level_11s)/count(level_11s) as avg_11s,
+       group_concat(player) as players
+       from df1
+       group by team
+       order by avg_trophies desc, avg_11s desc
+"""
+team1 = sqldf(team1_q, globals())
+team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
+team1['rank'] = team1.index+1
+team1 = team1[['rank','players','team','avg_trophies','avg_11s']]
+team1.to_csv('./output/c9_team_averages.csv', index=False)
+
 color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
+
+team2_q = """
+select team,
+       sum(trophies)/count(trophies) as avg_trophies,
+       sum(level_11s)/count(level_11s) as avg_11s,
+       group_concat(player) as players
+       from df2
+       group by team
+       order by avg_trophies desc, avg_11s desc
+"""
+team2 = sqldf(team2_q, globals())
+team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
+team2['rank'] = team2.index+1
+team2 = team2[['rank','players','team','avg_trophies','avg_11s']]
+team2.to_csv('./output/c6_team_averages.csv', index=False)
