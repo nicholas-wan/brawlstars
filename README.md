@@ -6,7 +6,7 @@ Create a virtual environment with Python==3.7. Install the Python library `brawl
 ```
 conda create -n brawlstars python==3.7
 conda activate brawlstars
-pip install brawlstats tqdm pandas tabulate
+pip install brawlstats tqdm pandas tabulate pandasql
 ```
 # Usage
 
