@@ -9,7 +9,7 @@ import undetected_chromedriver as uc
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--refresh_maps', '-rm', choices=['yes','no'], default='no', type=str, help='yes to obtain the latest maps, else no')
-parser.add_argument('--refresh_stats', '-s', choices=['yes','no'], default='yes', type=str, help='yes to obtain the latest stats, else no')
+parser.add_argument('--refresh_stats', '-s', choices=['yes','no'], default='no', type=str, help='yes to obtain the latest stats, else no')
 parser.add_argument('--generate_infographics', '-g', choices=['yes','no'], default='yes', type=str, help='yes to obtain the latest infographics')
 parser.add_argument('--num_best_brawlers', '-n', default=12, type=int, help='Enter the number of best brawlers to find out the statistics for')
 parser.add_argument('--chrome_headless', '-c', choices=['yes','no'], default='yes', type=str, help='yes for headless chrome browser else no')
@@ -97,11 +97,9 @@ if refresh_stats=='yes':
 
         res = pd.DataFrame({'brawlers':brawlers, 'win_rates':win_rates, 'usage_rank':usage_rank}).sort_values(by=['win_rates'], ascending=False)
         num_brawlers = len(res)
-        res = res[res['usage_rank']<=min_usage_rank].reset_index(drop=True)
-
-        best_brawlers = list(res.head(num_best_brawlers)['brawlers'])
-        win_rates = list(res.head(num_best_brawlers)['win_rates'])
-        usage_rank = list(res.head(num_best_brawlers)['usage_rank'])
+        best_brawlers = list(res['brawlers'])
+        win_rates = list(res['win_rates'])
+        usage_rank = list(res['usage_rank'])
         driver.quit()
         return best_brawlers, win_rates, usage_rank, num_brawlers
 
@@ -143,11 +141,11 @@ if refresh_stats=='yes':
 if generate_infographics=='yes':
     print('Generating Infographics')
     # Generate Top 12 brawlers overall
-    best_brawlers_df = get_best_brawlers()
+    best_brawlers_df = get_best_brawlers(num_best_brawlers)
     df_to_png(best_brawlers_df, 'infographics/infographics1.png')
 
     # Generate best brawlers for each map. Save in 2 seperate png
-    cheatsheet = get_best_brawlers_map()
+    cheatsheet = get_best_brawlers_map(num_best_brawlers)
     cheatsheet_part1 = cheatsheet.fillna('   ').head(9)
     cheatsheet_part2 = cheatsheet.fillna('   ').tail(len(cheatsheet)-9)
     df_to_png(cheatsheet_part1, 'infographics/infographics2.png')

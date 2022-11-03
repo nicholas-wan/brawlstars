@@ -67,8 +67,36 @@ def nth_repl(s, sub, repl, n):
 def path_to_image_html(path, width='30'):
     return '<img src="'+ path + '" width="{}" >'.format(width)
 
-def get_best_brawlers():
-    df = pd.read_csv('brawlers.csv')[['best_brawlers']]
+def filter_brawler_df(min_usage_rank = 40, num_best_brawlers = 12):
+    df = pd.read_csv('brawlers.csv')
+    df['best_brawlers'] = df['best_brawlers'].map(clean_brawlers_string)
+    df
+
+    new_best_brawlers_list = []
+    new_win_rates_list = []
+    new_usage_rank_list = []
+    for i in range(len(df)):
+        temp_df = pd.DataFrame({'brawlers':df.iloc[i]['best_brawlers'].split(', '), 'win_rates': df.iloc[i]['win_rates'].split(', '), 'usage_rank':df.iloc[i]['usage_rank'].split(', ')})
+        temp_df['usage_rank'] = temp_df['usage_rank'].map(int)
+        temp_df = temp_df[temp_df['usage_rank']<= min_usage_rank].head(num_best_brawlers).reset_index(drop=True)
+        brawlers = ', '.join(temp_df['brawlers'])
+        win_rates = ', '.join(temp_df['win_rates'])
+        temp_df['usage_rank'] = temp_df['usage_rank'].map(str)
+        usage_rank = ', '.join(temp_df['usage_rank'])
+
+        new_best_brawlers_list.append(brawlers)
+        new_win_rates_list.append(win_rates)
+        new_usage_rank_list.append(usage_rank)
+
+    df['best_brawlers'] = new_best_brawlers_list
+    df['win_rates'] = new_win_rates_list
+    df['usage_rank'] = new_usage_rank_list
+
+    return df
+    
+def get_best_brawlers(num_best_brawlers):
+    df = filter_brawler_df()[['best_brawlers']]
+    df['best_brawlers'] = df['best_brawlers'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
     df['best_brawlers'] = df['best_brawlers'].map(clean_brawlers_string)
 
     brawlers = {}
@@ -126,7 +154,7 @@ def get_best_brawlers():
 
     best_maps = get_best_maps()
 
-    df3 = df.merge(df2, on=['brawlers']).head(12)
+    df3 = df.merge(df2, on=['brawlers']).head(num_best_brawlers)
     df4 = df3.merge(best_maps, on=['brawlers'])
 
     columns = ['best_map1', 'best_map2','best_map3']
@@ -148,15 +176,38 @@ def get_best_brawlers():
     df4 = df4.sort_values(by=['freq', 'weighted_score'], ascending=False).reset_index(drop=True)
     df4.index+=1
 
+    # Overall usage rank
+    def get_usage_rank(best_brawler_list):
+        df = pd.read_csv('brawlers.csv')
+        dict_list = []
+        for i in range(len(df)):
+            dict_list.append(dict(zip(df.iloc[i]['best_brawlers'].split(', '), df.iloc[i]['usage_rank'].split(', '))))
+
+        avg_list = []
+        for brawler in best_brawler_list:
+            sum_of_ranks = 0
+            for d in dict_list:
+                sum_of_ranks+= int(d[brawler])
+            avg_list.append(int(sum_of_ranks/len(dict_list)))
+           
+        return avg_list
+    df4['avg_usage_rank'] = get_usage_rank(list(df4['brawlers'].map(lambda x: x.split('/')[-1].replace('.png',''))))
+
     df4['brawlers'] = df4['brawlers'].map(lambda x: path_to_image_html(x, width=40))
     for num in [str(x) for x in range(1, 4)]:
         df4[num] = df4[num].map(lambda x: path_to_image_html(x, width=30))
-    df4.columns = ['brawlers','freq','weighted_score','','bestmap1','','bestmap2','','bestmap3']
+
+    df4.columns = ['brawlers','freq','weighted_score','','bestmap1','','bestmap2','','bestmap3','avg_usage_rank']
+
 
     return df4
 
-def get_best_brawlers_map():
-    df = pd.read_csv('brawlers.csv')
+def get_best_brawlers_map(num_best_brawlers):
+    df = filter_brawler_df()
+    df['best_brawlers'] = df['best_brawlers'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
+    df['win_rates'] = df['win_rates'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
+    df['usage_rank'] = df['usage_rank'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
+
     df['best_brawlers'] = df['best_brawlers'].map(clean_brawlers_string)
         
     columns = [str(x) for x in list(range(1,best_brawlers+1))]
@@ -289,13 +340,13 @@ def df_to_png(df, output_png):
     imgkit.from_file('temp.html', output_png, options=options)
     if output_png == 'infographics/infographics1.png':
         img = Image.open(output_png)
-        border = (0, 0, 365, 0) # left, top, right, bottom
+        border = (0, 0, 260, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
         img.save(output_png)
         
     if output_png == 'infographics/infographics_checklist.png':
         img = Image.open(output_png)
-        border = (0, 0, 620, 0) # left, top, right, bottom
+        border = (0, 0, 625, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
         img.save(output_png)
             
