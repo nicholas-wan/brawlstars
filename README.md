@@ -8,6 +8,37 @@ conda create -n brawlstars python==3.7
 conda activate brawlstars
 pip install brawlstats tqdm pandas tabulate pandasql xlsxwriter selenium
 ```
+
+# Scripts
+
+## main.py 
+Pulls club level data from Brawl Stars API to create the following 3 files.
+1. /output/c6aurac_brawler_levels.csv
+2. /output/c9aurac_brawler_levels.csv
+3. /output/comparison.py
+
+## aura.py
+Formats c6 and c9 team statistics by combining with team numbers from google sheets. Also creates team average level statistics. Run `main.py` before running this file. Outputs the following 4 files.
+
+1. /output/c6_team_averages.csv
+2. /output/c9_team_averages.csv
+3. /output/c6_aurac_brawler_levels.xlsx
+4. /output/c9_aurac_brawler_levels.xlsx
+
+## maps/best_brawlers.py
+Uses selenium to web scrape brawlify website to generate infographics. Has 2 important parameters.
+```
+-- refresh_maps (yes/no)
+# Used to generate list of map urls in `maps/maps.csv`. Needed whenever power league maps change. If not working, check if brawlify website https://brawlify.com/league/ is correctly showing the maps.
+
+-- refresh_stats (yes/no)
+# Visits each of the map urls in `maps/maps.csv` to download the latest win rate data. Will refresh by default when running this script
+```
+
+Outputs infographics in `/maps/infographics`
+
+
+
 # Usage
 
 Insert your Brawl Stars Developer API Key after registering for an account at https://developer.brawlstars.com/ into `api_key.txt`
