@@ -250,7 +250,7 @@ images = get_images_dict()
 
 team_tags_silver = ['#C9LR0R0V','#UCY09URC','#2YQUPUYJ'] #C9 - Silver, Blue, Hogg
 team_tags_tribe_c6 = ['#V8VRPRYQ','#89GV9UG9Q','#C29RQJLU'] # C6 Tribe
-team_tags_tribe_c9 = ['#2PR80P8CU','#LQPP9Y2R8','#J2RLUJP2'] # C9 Tribe
+team_tags_tribe_c9 = ['#2PR80P8CU','#9C0UUJVJ','#J2RLUJP2'] # C9 Tribe
 
 def get_best_brawlers_checklist(best_brawlers_df, club, team_tags = ['#C9LR0R0V','#UCY09URC','#2YQUPUYJ']):
     if club=='c9':
@@ -344,11 +344,17 @@ def df_to_png(df, output_png):
         img = ImageOps.crop(img, border)
         img.save(output_png)
         
-    if output_png == 'infographics/infographics_checklist.png':
+    if output_png == 'infographics/infographics_checklist_team5.png':
         img = Image.open(output_png)
         border = (0, 0, 625, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
         img.save(output_png)
             
+    if output_png == 'infographics/infographics_checklist_team2.png':
+        img = Image.open(output_png)
+        border = (0, 0, 580, 0) # left, top, right, bottom
+        img = ImageOps.crop(img, border)
+        img.save(output_png)
+
     os.remove('temp.html')
     print('Complete, image saved to:', output_png)
