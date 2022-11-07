@@ -196,7 +196,7 @@ def get_player_stats(playertag, truncate_num):
     
     return res_df
 
-if True:
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--tags', '-t', nargs="+", default=['2GV02VVQR','2GQRRVC20'], type=str, help='python -i main.py -t 2YQUPUYJ')
     parser.add_argument('--truncate',  default=60, type=int, help='yes to only list the top X brawlers, else list all')
