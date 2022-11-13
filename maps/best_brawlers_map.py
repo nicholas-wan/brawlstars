@@ -78,12 +78,9 @@ if __name__ == '__main__':
         win_rates_list = []
         usage_rank_list = []
         num_brawlers_list = []
-        filter_list = []
 
-        def scrape_info(url, filter_trophies, threshold=53):
+        def scrape_info(url, threshold=53):
             driver = initialize_uc_driver()
-            if filter_trophies=='600+':
-                url+='/600%2B'
             driver.get(url)
 
             stats = [x.text for x in driver.find_elements(By.CLASS_NAME,"row")]
@@ -105,23 +102,20 @@ if __name__ == '__main__':
             return best_brawlers, win_rates, usage_rank, num_brawlers
 
         for i in tqdm(range(len(df))):
-            best_brawlers, win_rates, usage_rank, num_brawlers = scrape_info(df.iloc[i]['url'], filter_trophies='600+')
-            filter_value = '600+'
+            best_brawlers, win_rates, usage_rank, num_brawlers = scrape_info(df.iloc[i]['url'])
             if win_rates==[]:
                 print('[Retrying]:',df.iloc[i]['map'], '[num_brawlers]:',num_brawlers)
-                new_best_brawlers, new_win_rates, new_usage_rank, new_num_brawlers = scrape_info(df.iloc[i]['url'], filter_trophies='', threshold=0)
+                new_best_brawlers, new_win_rates, new_usage_rank, new_num_brawlers = scrape_info(df.iloc[i]['url'], threshold=0)
                 if new_num_brawlers > num_brawlers:
                     best_brawlers = new_best_brawlers
                     win_rates = new_win_rates
                     usage_rank = new_usage_rank
                     num_brawlers = new_num_brawlers
-                    filter_value =''
 
             best_brawler_list.append(best_brawlers)
             win_rates_list.append(win_rates)
             usage_rank_list.append(usage_rank)
             num_brawlers_list.append(num_brawlers)
-            filter_list.append(filter_value)
 
         res_df = df.copy()
 
@@ -129,9 +123,8 @@ if __name__ == '__main__':
         res_df['win_rates'] = win_rates_list
         res_df['usage_rank'] = usage_rank_list
         res_df['num_brawlers'] = num_brawlers_list
-        res_df['filter'] = filter_list
 
-        res_df = res_df[['gamemodes','map','best_brawlers','win_rates','usage_rank','num_brawlers','filter']]
+        res_df = res_df[['gamemodes','map','best_brawlers','win_rates','usage_rank','num_brawlers']]
         res_df['best_brawlers'] = res_df['best_brawlers'].map(lambda x: ', '.join(x))
         res_df['win_rates'] = res_df['win_rates'].map(lambda x: ', '.join(x))
         res_df['usage_rank'] = res_df['usage_rank'].map(lambda x: ', '.join([str(y) for y in x]))

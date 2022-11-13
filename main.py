@@ -19,10 +19,17 @@ import string
 import argparse
 import statistics
 
+####################
+### API KEY PATH ###
+####################
+
+# Insert your api_key path here, e.g C:/Users/username/Desktop/api_key.txt
+api_key = "api_key.txt"
+
 today = date.today()
 
 # Insert your Brawl Stars Developer's API Key into a file in the same directory 'api_key.txt'
-with open("api_key.txt",'r') as f:
+with open(api_key,'r') as f:
     token = f.read()
 
 client = brawlstats.Client(token)

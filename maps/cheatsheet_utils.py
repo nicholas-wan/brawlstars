@@ -199,7 +199,6 @@ def get_best_brawlers(num_best_brawlers):
 
     df4.columns = ['brawlers','freq','weighted_score','','bestmap1','','bestmap2','','bestmap3','avg_usage_rank']
 
-
     return df4
 
 def get_best_brawlers_map(num_best_brawlers):
@@ -224,7 +223,7 @@ def get_best_brawlers_map(num_best_brawlers):
     df['usage_rank'] = df['usage_rank'].map(clean_string)
     df['usage_rank'] = df['usage_rank'].map(lambda s: nth_repl(s, ", ","<br>",best_brawlers/3))
     df = df.rename(columns={"num_brawlers": "n"})
-    df = df[['gamemodes','map']+columns+['win_rates','usage_rank','n','filter']]
+    df = df[['gamemodes','map']+columns+['win_rates','usage_rank','n']]
     df.index += 1
 
     for col in columns+['gamemodes']:
