@@ -91,9 +91,9 @@ if __name__ == '__main__':
             stats = stats[2:]
             stats = stats[0].split('\n')
 
-            brawlers = stats[::7]
-            win_rates = stats[2::7]
-            usage_rank = stats[5::7]
+            brawlers = stats[::10]
+            win_rates = stats[2::10]
+            usage_rank = stats[5::10]
             usage_rank = [int(y.replace('#','')) for y in usage_rank]
 
             res = pd.DataFrame({'brawlers':brawlers, 'win_rates':win_rates, 'usage_rank':usage_rank}).sort_values(by=['win_rates'], ascending=False)

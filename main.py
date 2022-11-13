@@ -22,7 +22,7 @@ import statistics
 today = date.today()
 
 # Insert your Brawl Stars Developer's API Key into a file in the same directory 'api_key.txt'
-with open("../Desktop/api_key.txt",'r') as f:
+with open("api_key.txt",'r') as f:
     token = f.read()
 
 client = brawlstats.Client(token)
