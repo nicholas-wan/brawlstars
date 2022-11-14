@@ -176,9 +176,9 @@ def plot_bar(clubname, excel_file, sheetname, output_file):
     plt.savefig(output_file)
 print('----- Generate Team Excel Workbook -----')
 
-plot_bar('<C9>','output/c9aurac_brawler_levels_team.xlsx','C9 Brawler Levels', './output/c9_barchat.jpg')
+plot_bar('<C9>','output/c9aurac_brawler_levels_team.xlsx','C9 Brawler Levels', './output/c9_barchart.jpg')
 print('[Output] ./output/c9_barchat.jpg')
 
-plot_bar('<C6>','output/c6aurac_brawler_levels_team.xlsx','C6 Brawler Levels', './output/c6_barchat.jpg')
+plot_bar('<C6>','output/c6aurac_brawler_levels_team.xlsx','C6 Brawler Levels', './output/c6_barchart.jpg')
 print('[Output] ./output/c6_barchat.jpg')
 
