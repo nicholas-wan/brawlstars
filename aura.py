@@ -7,14 +7,19 @@ import argparse
 import requests
 import time
 from pandasql import sqldf
+import seaborn as sns
+import warnings
+import matplotlib.pyplot as plt
+import numpy as np
+warnings.filterwarnings("ignore")
 
 c9_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=1839516291'
 c9_brawlers_csv = 'output/c9aurac_brawler_levels.csv'
-c9_output = 'output/c9aurac_brawler_levels_team.xlsx'
+c9_output = './output/c9aurac_brawler_levels_team.xlsx'
 
 c6_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=233369826'
 c6_brawlers_csv = 'output/c6aurac_brawler_levels.csv'
-c6_output = 'output/c6aurac_brawler_levels_team.xlsx'
+c6_output = './output/c6aurac_brawler_levels_team.xlsx'
 
 def clean_string(s):
     try:
@@ -109,6 +114,10 @@ def read_csv(gsheet_url, brawler_levels_csv, output, clubname, color_scheme, tru
     return res, na
 
 color_scheme = ["#951F06", "#f8dcdc"]
+
+print('----- Generate Team Excel Workbook -----')
+print('[Output] ./output/c9aurac_brawler_levels_team.xlsx')
+
 df1, na1  = read_csv(c9_sheet, c9_brawlers_csv, c9_output, 'C9', color_scheme)
 
 team1_q = """
@@ -125,9 +134,12 @@ team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
 team1['rank'] = team1.index+1
 team1 = team1[['rank','players','team','avg_trophies','avg_11s']]
 team1.to_csv('./output/c9_team_averages.csv', index=False)
+print('[Output] ./output/c9_team_averages.csv')
 
 color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
+
+print('[Output] ./output/c6aurac_brawler_levels_team.xlsx')
 
 team2_q = """
 select team,
@@ -143,3 +155,30 @@ team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
 team2['rank'] = team2.index+1
 team2 = team2[['rank','players','team','avg_trophies','avg_11s']]
 team2.to_csv('./output/c6_team_averages.csv', index=False)
+
+print('[Output] ./output/c6_team_averages.csv')
+
+def plot_bar(clubname, excel_file, sheetname, output_file):
+    df = pd.read_excel(excel_file, sheet_name=sheetname,engine='openpyxl', skiprows=2)
+    df = df.sort_values(by=['team','level_11s'])
+    df['team'] = df['team'].map(lambda x: 'Team '+str(x))
+    # sns.barplot(data=df, x="island", y="body_mass_g", hue="sex")
+    fig, ax = plt.subplots(figsize=(20,10))
+    sns.barplot(data=df, x="player", y="level_11s",hue='team', dodge=False)
+    plt.xticks(rotation=90)
+    mean = round(sum(df['level_11s']/len(df)),2)
+    plt.axhline(y=np.nanmean(df.level_11s), color='red', linestyle='--', linewidth=2, label='Avg number of p11s = '+str(mean))
+    plt.legend(loc='upper left')
+    plt.title(clubname+' Number of Power 11 Brawlers')
+    for container in ax.containers:
+        ax.bar_label(container)
+
+    plt.savefig(output_file)
+print('----- Generate Team Excel Workbook -----')
+
+plot_bar('<C9>','output/c9aurac_brawler_levels_team.xlsx','C9 Brawler Levels', './output/c9_barchat.jpg')
+print('[Output] ./output/c9_barchat.jpg')
+
+plot_bar('<C6>','output/c6aurac_brawler_levels_team.xlsx','C6 Brawler Levels', './output/c6_barchat.jpg')
+print('[Output] ./output/c6_barchat.jpg')
+

@@ -162,6 +162,8 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
 
     if clubtag in savelist:
         res.to_csv('./output/'+club_name_cleaned+'_brawler_levels.csv', index=False)
+        print('[Output] '+'./output/'+club_name_cleaned+'_brawler_levels.csv')
+
 
     stats_dict = {'Club': club.name,
                   'Club Tag': clubtag,
@@ -236,6 +238,7 @@ if __name__ == '__main__':
                 player_df = player_df.drop('brawlers_10', axis=1)
             player_df.to_csv('./output/players.csv', index=False)
             print(player_df)
+            print('[Output] ./output/players.csv')
         #print(player_df.drop(['brawlers_10'], axis=1).to_markdown(tablefmt="pretty"))
 
     if len(club_tags)>0:
@@ -256,5 +259,6 @@ if __name__ == '__main__':
             compare_stats = compare_stats.sort_values(by=['Total Trophies'], ascending=False)
             compare_stats.to_csv('./output/comparison.csv', index=False)
             print(compare_stats.to_markdown(tablefmt="pretty"))
+            print('[Output] ./output/comparison.csv')
 
     print('Complete')

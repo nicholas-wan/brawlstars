@@ -2,11 +2,11 @@
 This script obtains the information of players or clubs given the respective tag.
 
 # Installation
-Create a virtual environment with Python==3.7. Install the Python library `brawlstats`
+Create a virtual environment with Python==3.7. Install the Python library `brawlstats`. Run each line individually.
 ```
 conda create -n brawlstars python==3.7
 conda activate brawlstars
-pip install brawlstats tqdm pandas tabulate pandasql xlsxwriter selenium IPython imgkit pillow undetected_chromedriver Jinja2
+pip install brawlstats tqdm pandas tabulate pandasql xlsxwriter selenium IPython imgkit pillow undetected_chromedriver Jinja2 seaborn
 ```
 
 # Scripts
