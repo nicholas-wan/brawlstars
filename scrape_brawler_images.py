@@ -28,7 +28,7 @@ headers ={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53
 print('Downloading brawler images to')
 for i in tqdm(range(len(links))):
     url = links[i] 
-    fname = os.path.join('brawler_images',links[i].split('/')[-1])
+    fname = os.path.join('maps/brawler_images',links[i].split('/')[-1])
     res = requests.get(url,headers=headers)
     if not os.path.exists(fname):
         with open(fname, 'wb') as f:

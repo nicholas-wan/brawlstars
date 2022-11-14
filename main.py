@@ -161,8 +161,12 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
     club_name_cleaned = clean_player_name(club.name)
 
     if clubtag in savelist:
-        res.to_csv('./output/'+club_name_cleaned+'_brawler_levels.csv', index=False)
-        print('[Output] '+'./output/'+club_name_cleaned+'_brawler_levels.csv')
+        if 'c9' in club_name_cleaned:
+            res.to_csv('./output/c9/'+club_name_cleaned+'_brawler_levels.csv', index=False)
+            print('[Output] '+'./output/c9/'+club_name_cleaned+'_brawler_levels.csv')
+        else:
+            res.to_csv('./output/c6/'+club_name_cleaned+'_brawler_levels.csv', index=False)
+            print('[Output] '+'./output/c6/'+club_name_cleaned+'_brawler_levels.csv')            
 
 
     stats_dict = {'Club': club.name,

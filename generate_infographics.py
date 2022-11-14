@@ -4,8 +4,11 @@ import pandas as pd
 from selenium.webdriver.common.by import By
 from tqdm import tqdm
 import argparse
-from cheatsheet_utils import *
 import undetected_chromedriver as uc
+
+import sys
+sys.path.append('maps')
+from cheatsheet_utils import *
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -26,6 +29,10 @@ if __name__ == '__main__':
     generate_infographics = args.generate_infographics
     num_best_brawlers = args.num_best_brawlers # Lists out the best brawlers
     min_usage_rank = args.min_usage_rank
+
+    map_urls_csv = './maps/map_urls.csv'
+    brawler_data_csv = './maps/brawlers.csv'
+    infographics_output_folder = './output/infographics'
 
     ############
     ### Main ###
@@ -63,15 +70,15 @@ if __name__ == '__main__':
 
         df = pd.DataFrame({'gamemodes':gamemodes, 'url':links[:18]})
         if len(df)==18:
-            df.to_csv('./map_urls.csv', index=False)
-            print('Saved csv to map_urls.csv')
+            df.to_csv(map_urls_csv, index=False)
+            print('Saved csv to '+map_urls_csv)
         else:
             print('Error with maps')
             print(df)
 
     if refresh_stats=='yes':
         print('Refreshing data for best brawlers for each Map')
-        df = pd.read_csv('./map_urls.csv')
+        df = pd.read_csv(map_urls_csv)
         df['map'] = df['url'].map(lambda x: x.split('/')[-1].replace('-',' '))
 
         best_brawler_list = []
@@ -102,20 +109,15 @@ if __name__ == '__main__':
             return best_brawlers, win_rates, usage_rank, num_brawlers
 
         for i in tqdm(range(len(df))):
-            best_brawlers, win_rates, usage_rank, num_brawlers = scrape_info(df.iloc[i]['url'])
-            if win_rates==[]:
-                print('[Retrying]:',df.iloc[i]['map'], '[num_brawlers]:',num_brawlers)
-                new_best_brawlers, new_win_rates, new_usage_rank, new_num_brawlers = scrape_info(df.iloc[i]['url'], threshold=0)
-                if new_num_brawlers > num_brawlers:
-                    best_brawlers = new_best_brawlers
-                    win_rates = new_win_rates
-                    usage_rank = new_usage_rank
-                    num_brawlers = new_num_brawlers
-
-            best_brawler_list.append(best_brawlers)
-            win_rates_list.append(win_rates)
-            usage_rank_list.append(usage_rank)
-            num_brawlers_list.append(num_brawlers)
+            try:
+                best_brawlers, win_rates, usage_rank, num_brawlers = scrape_info(df.iloc[i]['url'])
+                
+                best_brawler_list.append(best_brawlers)
+                win_rates_list.append(win_rates)
+                usage_rank_list.append(usage_rank)
+                num_brawlers_list.append(num_brawlers)
+            except:
+                print('Check for error in website:', df.iloc[i]['url'])
 
         res_df = df.copy()
 
@@ -129,26 +131,26 @@ if __name__ == '__main__':
         res_df['win_rates'] = res_df['win_rates'].map(lambda x: ', '.join(x))
         res_df['usage_rank'] = res_df['usage_rank'].map(lambda x: ', '.join([str(y) for y in x]))
 
-        res_df.to_csv('./brawlers.csv', index=False)
+        res_df.to_csv(brawler_data_csv, index=False)
         print(res_df)
 
     if generate_infographics=='yes':
         print('Generating Infographics')
         # Generate Top 12 brawlers overall
         best_brawlers_df = get_best_brawlers(num_best_brawlers)
-        df_to_png(best_brawlers_df, 'infographics/infographics1.png')
+        df_to_png(best_brawlers_df, os.path.join(infographics_output_folder, 'infographics1.png'))
 
         # Generate best brawlers for each map. Save in 2 seperate png
         cheatsheet = get_best_brawlers_map(num_best_brawlers)
         cheatsheet_part1 = cheatsheet.fillna('   ').head(9)
         cheatsheet_part2 = cheatsheet.fillna('   ').tail(len(cheatsheet)-9)
-        df_to_png(cheatsheet_part1, 'infographics/infographics2.png')
-        df_to_png(cheatsheet_part2, 'infographics/infographics3.png')
+        df_to_png(cheatsheet_part1, os.path.join(infographics_output_folder, 'infographics2.png'))
+        df_to_png(cheatsheet_part2, os.path.join(infographics_output_folder, 'infographics3.png'))
 
         # Generate Checklist for a specific team
         checklist_df = get_best_brawlers_checklist(best_brawlers_df, 'c9')#, team_tags = team_tags_tribe)
-        df_to_png(checklist_df, 'infographics/infographics_checklist_team5.png')
+        df_to_png(checklist_df, os.path.join(infographics_output_folder, 'infographics_checklist_team5.png'))
 
         # Generate Checklist for tribe
         checklist_df = get_best_brawlers_checklist(best_brawlers_df, 'c9', team_tags = team_tags_tribe_c9)
-        df_to_png(checklist_df, 'infographics/infographics_checklist_team2.png')
+        df_to_png(checklist_df, os.path.join(infographics_output_folder, 'infographics_checklist_team2.png'))

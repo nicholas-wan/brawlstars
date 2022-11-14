@@ -11,9 +11,13 @@ from PIL import ImageOps, Image
 ##############
 
 best_brawlers = 12
-images_dir = './brawler_images'
+images_dir = './maps/brawler_images'
 images_path = os.listdir(images_dir)
-gamemodes_dir = './gamemode_images'
+gamemodes_dir = './maps/gamemode_images'
+brawler_data_csv = './maps/brawlers.csv'
+
+c9_brawler_levels_csv='./output/c9/c9aurac_brawler_levels.csv'
+c6_brawler_levels_csv='./output/c6/c6aurac_brawler_levels.csv'
 
 def clean_brawlers_string(s):
     try:
@@ -68,7 +72,7 @@ def path_to_image_html(path, width='30'):
     return '<img src="'+ path + '" width="{}" >'.format(width)
 
 def filter_brawler_df(min_usage_rank = 40, num_best_brawlers = 12):
-    df = pd.read_csv('brawlers.csv')
+    df = pd.read_csv(brawler_data_csv)
     df['best_brawlers'] = df['best_brawlers'].map(clean_brawlers_string)
     df
 
@@ -126,7 +130,7 @@ def get_best_brawlers(num_best_brawlers):
     df2 = print_dataframe(df2)
 
     def get_best_maps():
-        df = pd.read_csv('brawlers.csv')[['map','best_brawlers','win_rates']]
+        df = pd.read_csv(brawler_data_csv)[['map','best_brawlers','win_rates']]
         df['best_brawlers'] = df['best_brawlers'].map(clean_brawlers_string)
         df['best_brawlers'] = df['best_brawlers'].str.split(', ')
         df['win_rates'] = df['win_rates'].str.split(', ')
@@ -162,7 +166,7 @@ def get_best_brawlers(num_best_brawlers):
     df4 = df4.drop(['best_maps'],axis=1)
 
     def get_gamemode_dict():
-        df = pd.read_csv('brawlers.csv')[['gamemodes','map']]
+        df = pd.read_csv(brawler_data_csv)[['gamemodes','map']]
         return dict(zip(df['map'], df['gamemodes']))
 
     gamemode_dict = get_gamemode_dict()
@@ -178,7 +182,7 @@ def get_best_brawlers(num_best_brawlers):
 
     # Overall usage rank
     def get_usage_rank(best_brawler_list):
-        df = pd.read_csv('brawlers.csv')
+        df = pd.read_csv(brawler_data_csv)
         dict_list = []
         for i in range(len(df)):
             dict_list.append(dict(zip(df.iloc[i]['best_brawlers'].split(', '), df.iloc[i]['usage_rank'].split(', '))))
@@ -231,7 +235,7 @@ def get_best_brawlers_map(num_best_brawlers):
     return df
 
 def get_images_dict():
-    df = pd.read_csv('brawlers.csv')
+    df = pd.read_csv(brawler_data_csv)
 
     images = {}
     for image in images_path:
@@ -253,9 +257,9 @@ team_tags_tribe_c9 = ['#2PR80P8CU','#9C0UUJVJ','#J2RLUJP2'] # C9 Tribe
 
 def get_best_brawlers_checklist(best_brawlers_df, club, team_tags = ['#C9LR0R0V','#UCY09URC','#2YQUPUYJ']):
     if club=='c9':
-        players = pd.read_csv('../output/c9aurac_brawler_levels.csv')
+        players = pd.read_csv(c9_brawler_levels_csv)
     else:
-        players = pd.read_csv('../output/c6aurac_brawler_levels.csv')
+        players = pd.read_csv(c6_brawler_levels_csv)
 
     players = players[players['tag'].isin(team_tags)][['player','level_11s','brawlers_11']].reset_index(drop=True)
 
@@ -337,19 +341,19 @@ options = {
 def df_to_png(df, output_png):
     write_to_html_file(df, filename='temp.html')
     imgkit.from_file('temp.html', output_png, options=options)
-    if output_png == 'infographics/infographics1.png':
+    if output_png == 'maps/infographics/infographics1.png':
         img = Image.open(output_png)
         border = (0, 0, 260, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
         img.save(output_png)
         
-    if output_png == 'infographics/infographics_checklist_team5.png':
+    if output_png == 'maps/infographics/infographics_checklist_team5.png':
         img = Image.open(output_png)
         border = (0, 0, 625, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
         img.save(output_png)
             
-    if output_png == 'infographics/infographics_checklist_team2.png':
+    if output_png == 'maps/infographics/infographics_checklist_team2.png':
         img = Image.open(output_png)
         border = (0, 0, 580, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)

@@ -1,54 +1,83 @@
-# Brawl Stars Club Statistics
-This script obtains the information of players or clubs given the respective tag.
-
-# Installation
-Create a virtual environment with Python==3.7. Install the Python library `brawlstats`. Run each line individually.
+# 1. Installation 
+#### 1.1 Software
+- Download `Anaconda3` from https://www.anaconda.com/products/distribution. Install with all the default paths. <b>*Important*</b> make sure to select add conda to PATH
+- Download `Chromedriver` from https://chromedriver.chromium.org/getting-started. Ensure it matches your Google Chrome version. Recommended to update google chrome to latest version as well.
+- Create a `Github` account https://www.github.com/ 
+- Install `git` for windows from https://git-scm.com/download/win 
+- Install `wkhtmltopdf` from https://wkhtmltopdf.org/downloads.html. Add `/wkhtmltopdf/bin` to PATH in your environment variables (e.g `C:\Program Files\wkhtmltopdf\bin`)
+#### 1.2. Virtual Environment
+Create a virtual environment with Python==3.7. Install the Python library `brawlstats`. Run each line individually. You will only need to run this section once.
 ```
 conda create -n brawlstars python==3.7
 conda activate brawlstars
 pip install brawlstats tqdm pandas tabulate pandasql xlsxwriter selenium IPython imgkit pillow undetected_chromedriver Jinja2 seaborn openpyxl
 ```
 
-# Scripts
+#### 1.3 Api Key
+Insert your Brawl Stars Developer API Key after registering for an account at https://developer.brawlstars.com/ into `api_key.txt`. Place this file into a newly created file `Desktop/brawlstars/api_key.txt`. 
 
-## main.py 
-Pulls club level data from Brawl Stars API to create the following 3 files.
-1. /output/c6aurac_brawler_levels.csv
-2. /output/c9aurac_brawler_levels.csv
-3. /output/comparison.py
+Enter the public IP address of your computer https://www.whatismyip.com/
 
-## aura.py
-Formats c6 and c9 team statistics by combining with team numbers from google sheets. Also creates team average level statistics. Run `main.py` before running this file. Outputs the following 4 files.
-
-1. /output/c6_team_averages.csv
-2. /output/c9_team_averages.csv
-3. /output/c6_aurac_brawler_levels.xlsx
-4. /output/c9_aurac_brawler_levels.xlsx
-
-## maps/best_brawlers.py
-Uses selenium to web scrape brawlify website to generate infographics. Has 2 important parameters.
+#### 1.4 Downloading the Files
 ```
--- refresh_maps (yes/no)
-# Used to generate list of map urls in `maps/maps.csv`. Needed whenever power league maps change. If not working, check if brawlify website https://brawlify.com/league/ is correctly showing the maps.
-
--- refresh_stats (yes/no)
-# Visits each of the map urls in `maps/maps.csv` to download the latest win rate data. Will refresh by default when running this script
+# Open a new command prompt
+cd Desktop
+git clone https://github.com/nicholas-wan/brawlstars.git
 ```
 
-Outputs infographics in `/maps/infographics`
+#### 1.5 Getting updates for the code
+```
+# Open a new command prompt
+cd Desktop/brawlstars
+git stash
+git pull
+```
+<hr style="height:1px;border:none;color:#333;background-color:#333;" />
 
+# 2. Basic Usage
 
+#### 2.0. Activating Virtual Environment
+You need this step before running code at all times.
+```
+# Open a new command prompt
+cd Desktop/brawlers
+conda activate brawlstars
+```
 
-# Usage
+#### 2.1. Club Level Statistics
+Generates club level statistics. Default clubs are set to Aura C9 and C6
+```
+python main.py
+```
 
-Insert your Brawl Stars Developer API Key after registering for an account at https://developer.brawlstars.com/ into `api_key.txt`
+#### 2.2. Aura - Custom Statistics 
+Formats c6 and c9 team statistics by combining with team numbers from google sheets. Also creates team average level statistics. Run `main.py` before running this file. 
 
-There are 2 forms of usage, player & club tag. Key in the tag as an argument, seperated by space and the code will automatically detect if it is a club or player. 
-Hashtag before the tags (#) is not necessary but will be accepted.
+```
+python aura.py
+```
 
-A mix of player and club tags can be accepted as well, but players and clubs can share the same tag. Priority would be checking for clubs.
+Outputs files to `/output/c9` or `/output/c6`
 
-## 1. Player Tag example
+#### 2.3. Infographics
+
+Uses selenium to web scrape https://brawlify.com/ to generate infographics. Has 2 important parameters. <br>(Will take 30s - 1 min per map.)
+```
+python generate_infographics.py --refresh_stats yes
+```
+
+Outputs infographics in `/output/infographics`
+
+<hr style="height:1px;border:none;color:#333;background-color:#333;" />
+
+# 3. Custom Usage
+
+#### 3.1. main.py 
+Key in the tag as an argument with `-t`, seperated by space and the code will automatically detect if it is a club or player. 
+
+Note that players and clubs can share the same tag. 
+
+#### 3.1.1. Player Tag example
 ```
 # Input Player tags with the -t argument, with a space in between tags. More than 1 player tag can be accepted. 
 # e.g python main.py -t PLAYERTAG1 PLAYERTAG2 PLAYERTAG3
@@ -64,7 +93,7 @@ A mix of player and club tags can be accepted as well, but players and clubs can
 # CSV saved to ./output/players.csv
 
 ```
-## 2. Club Tag Example
+#### 3.1.2. Club Tag Example
 
 ```
 # Input Club tags with the -t argument, with a space in between tags. More than 1 club tag can be accepted. 
@@ -89,14 +118,13 @@ A mix of player and club tags can be accepted as well, but players and clubs can
 
 ```
 
-## 3. Getting Brawler Levels of all players in a specific Club
-Use the -s argument, with clubs seperated by space
+#### 3.1.3. Getting Brawler Levels of all players in a specific Club
 
 ```
-# e.g python main.py -t CLUBTAG1 CLUBTAG2 CLUBTAG3 -s CLUBTAG 1
-# Generates comparison statistics for the 3 clubs, but only saves the brawler levels for the first club to CSV
+# e.g python main.py -t CLUBTAG1 CLUBTAG2 CLUBTAG3 
+# Generates comparison statistics for the 3 clubs
 
->>> python -i main.py -t 202VGURG0 90JC22UQ -s 202VGURG0
+>>> python -i main.py -t 202VGURG0 90JC22UQ 
 
 # A CSV of this format will be generated in the output folder, but will not be printed
 +---+----------+-----------+----------+----------+-----------+-----------+------------------------+----------+
@@ -110,3 +138,25 @@ Use the -s argument, with clubs seperated by space
 # CSV file saved to ./output/<CLUB_NAME>_brawler_levels.csv
 
 ```
+
+## 3.2. generate_infographics.py
+
+#### 3.2.1. Refreshing Map URLs
+```
+-- refresh_maps (yes/no)
+
+python generate_infographics.py --refresh_maps yes
+```
+Used to generate list of map urls in 'maps/maps.csv'. Needed whenever power league maps change. If not working, check if brawlify website https://brawlify.com/league/ is correctly showing the maps.
+
+#### 3.2.2. Refreshing Map Win Rate Statistics
+
+```
+-- refresh_stats (yes/no)
+
+python generate_infographics.py --refresh_stats yes
+```
+Visits each of the map urls in 'maps/maps.csv' to download the latest win rate data. Saves data to `/maps/brawlers.csv`
+
+#### 3.2.3 Generating Checklist
+Ensure that `main.py` is ran to get the most updated brawler statistics for c9 and c6.
