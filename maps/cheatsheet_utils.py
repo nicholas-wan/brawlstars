@@ -191,7 +191,7 @@ def get_best_brawlers(num_best_brawlers):
             avg_list.append(int(sum_of_ranks/len(dict_list)))
            
         return avg_list
-    df4['avg_usage_rank'] = get_usage_rank(list(df4['brawlers'].map(lambda x: x.split('/')[-1].replace('.png',''))))
+    df4['avg_usage_rank'] = get_usage_rank(list(df4['brawlers'].map(lambda x: os.path.basename(x).replace('.png',''))))
 
     df4['brawlers'] = df4['brawlers'].map(lambda x: path_to_image_html(x, width=40))
     for num in [str(x) for x in range(1, 4)]:
