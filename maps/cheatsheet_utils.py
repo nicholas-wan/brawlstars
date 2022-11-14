@@ -260,7 +260,7 @@ def get_best_brawlers_checklist(best_brawlers_df, club, team_tags = ['#C9LR0R0V'
     players = players[players['tag'].isin(team_tags)][['player','level_11s','brawlers_11']].reset_index(drop=True)
 
     df = best_brawlers_df.copy()[['brawlers','freq','weighted_score']].reset_index(drop=True)
-    df['names'] = df['brawlers'].map(lambda x:os.path.basename(x[x.find('brawler'):x.find('width')]).replace('.png',''))
+    df['names'] = df['brawlers'].map(lambda x:os.path.basename(x[x.find('brawler'):x.find('width')]).replace('.png','').replace('\"','').strip(' '))
     df['names'] = df['names'].map(lambda x:x.upper())
     df = df.set_index('names')
     player_list = list(players['player'])
