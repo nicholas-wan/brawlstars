@@ -198,5 +198,4 @@ print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
 dfi.export(comparison_df,comparison_png)
-os.remove(comparison)
 print('[Output] '+comparison_png)
