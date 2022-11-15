@@ -11,19 +11,25 @@ import seaborn as sns
 import warnings
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import dataframe_image as dfi
+
 warnings.filterwarnings("ignore")
 
 c9_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=1839516291'
 c9_brawlers_csv = 'output/c9/c9aurac_brawler_levels.csv'
 c9_output = './output/c9/c9aurac_brawler_levels_team.xlsx'
-c9_team_averages = './output/c9/c9_team_averages.csv'
-c9_barchart = './output/c9/c9_barchat.jpg'
+c9_team_averages_png = './output/c9/c9_team_averages.png'
+c9_barchart = './output/c9/c9_barchart.jpg'
 
 c6_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=233369826'
 c6_brawlers_csv = 'output/c6/c6aurac_brawler_levels.csv'
 c6_output = './output/c6/c6aurac_brawler_levels_team.xlsx'
-c6_team_averages = './output/c6/c6_team_averages.csv'
-c6_barchart = './output/c6/c6_barchat.jpg'
+c6_team_averages_png = './output/c6/c6_team_averages.png'
+c6_barchart = './output/c6/c6_barchart.jpg'
+
+comparison = './output/comparison.csv'
+comparison_png = './output/comparison.png'
 
 def clean_string(s):
     try:
@@ -137,8 +143,6 @@ team1 = sqldf(team1_q, globals())
 team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
 team1['rank'] = team1.index+1
 team1 = team1[['rank','players','team','avg_trophies','avg_11s']]
-team1.to_csv(c9_team_averages, index=False)
-print('[Output] '+c9_team_averages)
 
 color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
@@ -158,9 +162,6 @@ team2 = sqldf(team2_q, globals())
 team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
 team2['rank'] = team2.index+1
 team2 = team2[['rank','players','team','avg_trophies','avg_11s']]
-team2.to_csv(c6_team_averages, index=False)
-
-print('[Output] '+c6_team_averages)
 
 def plot_bar(clubname, excel_file, sheetname, output_file):
     df = pd.read_excel(excel_file, sheet_name=sheetname,engine='openpyxl', skiprows=2)
@@ -186,3 +187,16 @@ print('[Output] '+c9_barchart)
 plot_bar('<C6>',c6_output,'C6 Brawler Levels', c6_barchart)
 print('[Output] '+c6_barchart)
 
+
+print('----- Converting to PNG -----')
+
+dfi.export(team1,c9_team_averages_png)
+print('[Output] '+c9_team_averages_png)
+
+dfi.export(team2,c6_team_averages_png)
+print('[Output] '+c6_team_averages_png)
+
+comparison_df = pd.read_csv(comparison)
+dfi.export(comparison_df,comparison_png)
+os.remove(comparison)
+print('[Output] '+comparison_png)
