@@ -10,7 +10,7 @@ Create a virtual environment with Python==3.7. Install the Python library `brawl
 ```
 conda create -n brawlstars python==3.7
 conda activate brawlstars
-pip install brawlstats tqdm pandas tabulate pandasql xlsxwriter selenium IPython imgkit pillow undetected_chromedriver Jinja2 seaborn openpyxl
+pip install brawlstats tqdm pandas tabulate pandasql xlsxwriter selenium IPython imgkit pillow undetected_chromedriver Jinja2 seaborn openpyxl dataframe-image
 ```
 
 #### 1.3 Api Key
