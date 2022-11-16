@@ -229,13 +229,13 @@ def pad_add_text(image_path, margin, font_size, text_xy, text_value, output_path
     print('[Format]', output_path)
 
 # Comparison
-pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, (270, 25), "<C9> & <C6> Comparison Stats", comparison_c9_png, 'navy', 15)
-pad_add_text(comparison_c6_png, [93, 20, 20, 20], 40, (270, 25), "<C9> & <C6> Comparison Stats", comparison_c6_png, 'maroon', 15)
+pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, (270, 25), "<C9> & <C6> Comparison Stats", comparison_c9_png, 'maroon', 15)
+pad_add_text(comparison_c6_png, [93, 20, 20, 20], 40, (270, 25), "<C9> & <C6> Comparison Stats", comparison_c6_png, 'navy', 15)
 
 # Barchart
-pad_add_text(c9_barchart, [25, 20, 20, 20], 70, (455, 40), "<C9> Number of Power 11 Brawlers", c9_barchart, 'navy', 30)
-pad_add_text(c6_barchart, [25, 20, 20, 20], 70, (455, 40), "<C6> Number of Power 11 Brawlers", c6_barchart, 'maroon', 30)
+pad_add_text(c9_barchart, [25, 20, 20, 20], 70, (455, 40), "<C9> Number of Power 11 Brawlers", c9_barchart, 'maroon', 30)
+pad_add_text(c6_barchart, [25, 20, 20, 20], 70, (455, 40), "<C6> Number of Power 11 Brawlers", c6_barchart, 'navy', 30)
 
 # Team Averages
-pad_add_text(c9_team_averages_png, [40, 20, 20, 20], 22, (200, 12), "<C9> Team Averages", c9_team_averages_png, 'navy', 8)
-pad_add_text(c6_team_averages_png, [40, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'maroon', 8)
+pad_add_text(c9_team_averages_png, [40, 20, 20, 20], 22, (200, 12), "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
+pad_add_text(c6_team_averages_png, [40, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
