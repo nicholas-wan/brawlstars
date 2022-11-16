@@ -201,6 +201,10 @@ dfi.export(team2.style.hide_index(), c6_team_averages_png)
 print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
+cols_to_round = ['Avg 9s per member', 'Avg 9s per member','Avg 10s per member','Avg 11s per member','Stddev 11s']
+for col in cols_to_round:
+    comparison_df[col] = comparison_df[col].astype(str)
+
 dfi.export(comparison_df.style.hide_index(),comparison_c6_png)
 dfi.export(comparison_df.style.hide_index(),comparison_c9_png)
 
@@ -229,8 +233,8 @@ def pad_add_text(image_path, margin, font_size, text_xy, text_value, output_path
     print('[Format]', output_path)
 
 # Comparison
-pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, (270, 25), "<C9> & <C6> Comparison Stats", comparison_c9_png, 'maroon', 15)
-pad_add_text(comparison_c6_png, [93, 20, 20, 20], 40, (270, 25), "<C9> & <C6> Comparison Stats", comparison_c6_png, 'navy', 15)
+pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, (265, 25), "<C9> & <C6> Comparison Stats", comparison_c9_png, 'maroon', 15)
+pad_add_text(comparison_c6_png, [93, 20, 20, 20], 40, (265, 25), "<C9> & <C6> Comparison Stats", comparison_c6_png, 'navy', 15)
 
 # Barchart
 pad_add_text(c9_barchart, [25, 20, 20, 20], 70, (455, 40), "<C9> Number of Power 11 Brawlers", c9_barchart, 'maroon', 30)
