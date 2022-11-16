@@ -194,15 +194,15 @@ print('[Output] '+c6_barchart)
 
 print('----- Converting to PNG -----')
 
-dfi.export(team1,c9_team_averages_png)
+dfi.export(team1.style.hide_index(), c9_team_averages_png)
 print('[Output] '+c9_team_averages_png)
 
-dfi.export(team2,c6_team_averages_png)
+dfi.export(team2.style.hide_index(), c6_team_averages_png)
 print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
-dfi.export(comparison_df,comparison_c6_png)
-dfi.export(comparison_df,comparison_c9_png)
+dfi.export(comparison_df.style.hide_index(),comparison_c6_png)
+dfi.export(comparison_df.style.hide_index(),comparison_c9_png)
 
 print('[Output] '+c9_team_averages_png)
 print('[Output] '+c6_team_averages_png)
