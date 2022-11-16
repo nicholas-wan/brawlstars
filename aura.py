@@ -13,6 +13,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import dataframe_image as dfi
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 warnings.filterwarnings("ignore")
 
@@ -29,7 +32,8 @@ c6_team_averages_png = './output/c6/c6_team_averages.png'
 c6_barchart = './output/c6/c6_barchart.jpg'
 
 comparison = './output/comparison.csv'
-comparison_png = './output/comparison.png'
+comparison_c6_png = './output/c6/comparison.png'
+comparison_c9_png = './output/c9/comparison.png'
 
 def clean_string(s):
     try:
@@ -174,7 +178,7 @@ def plot_bar(clubname, excel_file, sheetname, output_file):
     mean = round(sum(df['level_11s']/len(df)),2)
     plt.axhline(y=np.nanmean(df.level_11s), color='red', linestyle='--', linewidth=2, label='Avg number of p11s = '+str(mean))
     plt.legend(loc='upper left')
-    plt.title(clubname+' Number of Power 11 Brawlers')
+    # plt.title(clubname+' Number of Power 11 Brawlers')
     for container in ax.containers:
         ax.bar_label(container)
 
@@ -197,5 +201,40 @@ dfi.export(team2,c6_team_averages_png)
 print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
-dfi.export(comparison_df,comparison_png)
-print('[Output] '+comparison_png)
+dfi.export(comparison_df,comparison_c6_png)
+dfi.export(comparison_df,comparison_c9_png)
+
+print('[Output] '+c9_team_averages_png)
+print('[Output] '+c6_team_averages_png)
+
+
+print('----- Formatting Image -----')
+
+def add_margin(pil_img, top, right, bottom, left, color):
+    width, height = pil_img.size
+    new_width = width + right + left
+    new_height = height + top + bottom
+    result = Image.new(pil_img.mode, (new_width, new_height), color)
+    result.paste(pil_img, (left, top))
+    return result
+
+def pad_add_text(image_path, margin, font_size, text_x, text_value, output_path):
+    im = Image.open(image_path)
+    im = add_margin(im, margin[0], margin[1], margin[2], margin[3], 'white')
+    im_new = ImageDraw.Draw(im)
+    font = ImageFont.truetype('font/OpenSans-Bold.ttf', font_size)
+    im_new.text((text_x, 10), text_value, font = font, fill =(0,0,0))
+    im.save(output_path)
+    print('[Format]', output_path)
+
+# Comparison
+pad_add_text(comparison_c9_png, [90, 20, 20, 20], 40, 250, "<C9> & <C6> Comparison Stats", comparison_c9_png)
+pad_add_text(comparison_c6_png, [90, 20, 20, 20], 40, 250, "<C9> & <C6> Comparison Stats", comparison_c6_png)
+
+# Barchart
+pad_add_text(c9_barchart, [10, 20, 20, 20], 60, 500, "<C9> Number of Power 11 Brawlers", c9_barchart)
+pad_add_text(c6_barchart, [10, 20, 20, 20], 60, 500, "<C6> Number of Power 11 Brawlers", c6_barchart)
+
+# Team Averages
+pad_add_text(c9_team_averages_png, [80, 20, 20, 20], 30, 150, "<C9> Team Averages", c9_team_averages_png)
+pad_add_text(c6_team_averages_png, [80, 20, 20, 20], 30, 150, "<C6> Team Averages", c6_team_averages_png)
