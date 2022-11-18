@@ -59,6 +59,20 @@ python aura.py
 
 Outputs files to `/output/c9` or `/output/c6`
 
+#### 2.2.1 Aura Sample Output
+
+<img src="./output/c9/comparison.png" width="500" />
+
+Comparison Statistics for different clubs. More clubs can be added. At a glance, shows the average <b>Trophy Level</b> for the members of the club and the average number of <b>Power Level 11 brawlers</b> for each member. Used at the start of <b>Club League</b> to get an indicative strength of opponents
+
+<img src="./output/c9/c9_team_averages.png" width="500" /> 
+
+Team Level Statistics for an individual club. Shows the average <b>Trophy Level</b> for the members of the club and the average number of <b>Power Level 11 brawlers</b> for each member in each team within the club. Useful for Club Leaders when allocating members to fixed teams.
+
+<img src="./output/c9/c9_barchart.jpg" width="500" />
+
+Barchart of number of <b>Power Level 11 brawlers</b> for each member in the club. Sorted and coloured by team number. Useful to indicate to club leaders which members need more focusing on.
+
 #### 2.3. Infographics
 
 Uses selenium to web scrape https://brawlify.com/ to generate infographics. Has 2 important parameters. <br>(Will take 30s - 1 min per map.)
@@ -67,6 +81,18 @@ python generate_infographics.py --refresh_stats yes
 ```
 
 Outputs infographics in `/output/infographics`
+
+#### 2.2.1 Generate Infographics Sample Output
+
+<img src="./output/infographics/infographics2.png" width="600" />
+<img src="./output/infographics/infographics3.png" width="600" />
+
+Shows the best brawlers for all <b> 18 Power / Club League </b> maps in two single images. Useful for anyone during drafting phase for Picks and Bans. Originally, this information is available on brawlify.com but is available on many different pages, hence the need to combine them for easier usage, thus this project web-scrapes and consolidates the information
+
+<img src="./output/infographics/infographics1.png" width="600" />
+
+Aggregates the brawler win rates for all <b> 18 Power / Club League </b> and lists out the overall best brawlers to invest in. `freq` refers to how often the brawler is a top-12 win-rate brawler in a particular map, while `weighted_score` considers the position as well as the frequency.
+
 
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
 
