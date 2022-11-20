@@ -341,19 +341,19 @@ options = {
 def df_to_png(df, output_png):
     write_to_html_file(df, filename='temp.html')
     imgkit.from_file('temp.html', output_png, options=options)
-    if output_png == 'maps/infographics/infographics1.png':
+    if 'infographics1.png' in output_png:
         img = Image.open(output_png)
         border = (0, 0, 260, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
         img.save(output_png)
         
-    if output_png == 'maps/infographics/infographics_checklist_team5.png':
+    if 'infographics_checklist_team5.png' in output_png:
         img = Image.open(output_png)
         border = (0, 0, 625, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
         img.save(output_png)
             
-    if output_png == 'maps/infographics/infographics_checklist_team2.png':
+    if 'infographics_checklist_team2.png' in output_png:
         img = Image.open(output_png)
         border = (0, 0, 580, 0) # left, top, right, bottom
         img = ImageOps.crop(img, border)
