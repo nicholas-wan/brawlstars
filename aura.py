@@ -274,5 +274,8 @@ add_image(c9_barchart, './misc_images/nita_brawler_levels.png', (1925,50),1.5)
 add_image(c6_barchart, './misc_images/nita_brawler_levels.png', (1925,50),1.5)
 
 # Team Averages
-pad_add_text(c9_team_averages_png, [50, 20, 20, 20], 22, (200, 12), "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
-pad_add_text(c6_team_averages_png, [50, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
+pad_add_text(c9_team_averages_png, [60, 20, 20, 20], 22, (200, 12), "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
+pad_add_text(c6_team_averages_png, [60, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
+
+add_image(c9_team_averages_png, './misc_images/rank.png', (560,15),4)
+add_image(c6_team_averages_png, './misc_images/rank.png', (560,15),4)
