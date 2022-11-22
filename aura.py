@@ -255,8 +255,8 @@ def add_image(img1_path, img2_path, coord, resize_factor):
 pad_add_text(c9_csv_output, [80, 20, 20, 20], 45, (170, 25), "<C9> Full Stats", c9_csv_output, 'maroon', 20)
 pad_add_text(c6_csv_output, [80, 20, 20, 20], 45, (170, 25), "<C6> Full Stats", c6_csv_output, 'navy', 20)
 
-add_image(c9_csv_output, './misc_images/masters.png', (535, 2), 8 )
-add_image(c6_csv_output, './misc_images/masters.png', (535, 2), 8 )
+add_image(c9_csv_output, './misc_images/masters.png', (530, 2), 8 )
+add_image(c6_csv_output, './misc_images/masters.png', (555, 2), 8 )
 
 # Comparison
 pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, (265, 25), "<C9> & <C6> Comparison Stats", comparison_c9_png, 'maroon', 15)
@@ -278,4 +278,4 @@ pad_add_text(c9_team_averages_png, [60, 20, 20, 20], 22, (200, 12), "<C9> Team A
 pad_add_text(c6_team_averages_png, [60, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
 
 add_image(c9_team_averages_png, './misc_images/rank.png', (560,15),4)
-add_image(c6_team_averages_png, './misc_images/rank.png', (560,15),4)
+add_image(c6_team_averages_png, './misc_images/rank.png', (540,15),4)
