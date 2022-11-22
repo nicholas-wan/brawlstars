@@ -21,12 +21,14 @@ warnings.filterwarnings("ignore")
 
 c9_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=1839516291'
 c9_brawlers_csv = 'output/c9/c9aurac_brawler_levels.csv'
+c9_csv_output = 'output/c9/c9aurac_full_stats.png'
 c9_output = './output/c9/c9aurac_brawler_levels_team.xlsx'
 c9_team_averages_png = './output/c9/c9_team_averages.png'
 c9_barchart = './output/c9/c9_barchart.jpg'
 
 c6_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=233369826'
 c6_brawlers_csv = 'output/c6/c6aurac_brawler_levels.csv'
+c6_csv_output = 'output/c6/c6aurac_full_stats.png'
 c6_output = './output/c6/c6aurac_brawler_levels_team.xlsx'
 c6_team_averages_png = './output/c6/c6_team_averages.png'
 c6_barchart = './output/c6/c6_barchart.jpg'
@@ -133,6 +135,9 @@ print('----- Generate Team Excel Workbook -----')
 print('[Output] '+c9_output)
 
 df1, na1  = read_csv(c9_sheet, c9_brawlers_csv, c9_output, 'C9', color_scheme)
+df1 = df1.drop(columns=['brawlers_11'], axis=1)
+dfi.export(df1.style.hide_index(), c9_csv_output)
+print('[Output] '+c9_csv_output)
 
 team1_q = """
 select team,
@@ -150,8 +155,11 @@ team1 = team1[['rank','players','team','avg_trophies','avg_11s']]
 
 color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
+df2 = df2.drop(columns=['brawlers_11'], axis=1)
+dfi.export(df2.style.hide_index(), c6_csv_output)
 
 print('[Output] '+c6_output)
+print('[Output] '+c6_csv_output)
 
 team2_q = """
 select team,
@@ -232,14 +240,39 @@ def pad_add_text(image_path, margin, font_size, text_xy, text_value, output_path
     im.save(output_path)
     print('[Format]', output_path)
 
+def add_image(img1_path, img2_path, coord, resize_factor):
+    img1 = Image.open(img1_path)
+    img2 = Image.open(img2_path).convert("RGBA")
+    
+    if resize_factor!=1:
+        width, height = img2.size
+        img2 = img2.resize((int(width//resize_factor), int(height//resize_factor)))
+    img1.paste(img2, (coord[0], coord[1]), mask = img2)
+    img1.save(img1_path)
+
+
+# Full Stats
+pad_add_text(c9_csv_output, [80, 20, 20, 20], 45, (170, 25), "<C9> Full Stats", c9_csv_output, 'maroon', 20)
+pad_add_text(c6_csv_output, [80, 20, 20, 20], 45, (170, 25), "<C6> Full Stats", c6_csv_output, 'navy', 20)
+
+add_image(c9_csv_output, './misc_images/masters.png', (535, 2), 8 )
+add_image(c6_csv_output, './misc_images/masters.png', (535, 2), 8 )
+
 # Comparison
 pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, (265, 25), "<C9> & <C6> Comparison Stats", comparison_c9_png, 'maroon', 15)
 pad_add_text(comparison_c6_png, [93, 20, 20, 20], 40, (265, 25), "<C9> & <C6> Comparison Stats", comparison_c6_png, 'navy', 15)
+
+add_image(comparison_c9_png, './misc_images/club_logo.png', (1005, 25), 6 )
+add_image(comparison_c6_png, './misc_images/club_logo.png', (1005, 25), 6 )
 
 # Barchart
 pad_add_text(c9_barchart, [25, 0, 20, 0], 70, (445, 40), "<C9> Number of Power 11 Brawlers", c9_barchart, 'maroon', 30)
 pad_add_text(c6_barchart, [25, 0, 20, 0], 70, (445, 40), "<C6> Number of Power 11 Brawlers", c6_barchart, 'navy', 30)
 
+# add nita logo to barchart
+add_image(c9_barchart, './misc_images/nita_brawler_levels.png', (1925,50),1.5)
+add_image(c6_barchart, './misc_images/nita_brawler_levels.png', (1925,50),1.5)
+
 # Team Averages
-pad_add_text(c9_team_averages_png, [40, 20, 20, 20], 22, (200, 12), "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
-pad_add_text(c6_team_averages_png, [40, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
+pad_add_text(c9_team_averages_png, [50, 20, 20, 20], 22, (200, 12), "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
+pad_add_text(c6_team_averages_png, [50, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
