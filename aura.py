@@ -175,7 +175,7 @@ select team,
        group_concat(player) as players
        from df2
        group by team
-       order by avg_trophies desc
+       order by avg_pl_score desc
 """
 team2 = sqldf(team2_q, globals()).fillna('')
 team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
