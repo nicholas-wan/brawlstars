@@ -18,6 +18,13 @@ from datetime import date
 import string
 import argparse
 import statistics
+import requests
+import re
+
+from pl_mapping_dict import mapping_dict
+from get_pl_rank import get_pl_rank, get_pl_rank_club
+
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0'}
 
 ####################
 ### API KEY PATH ###
@@ -93,6 +100,7 @@ def clean_player_name(name):
         return name
     return new_name
 
+
 def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, save=False):
     """
     params: clubtag (string) e.g #202VGURG0
@@ -113,10 +121,17 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
         df.insert(0, 'trophies', player.trophies)
         df.insert(0, 'tag', player.tag)
         df.insert(0, 'player', player.name)
+
+        if args.get_pl_rank:
+            df.insert(0, 'highest_pl_rank_score', get_pl_rank(player.tag)[1])
+
         df_list.append(df)
 
     res = pd.concat(df_list).reset_index(drop=True)
-
+    if args.get_pl_rank:
+        # res = get_pl_rank_club(res)
+        res['highest_pl_rank'] = res['highest_pl_rank_score'].map(lambda x: mapping_dict[x])
+    
     levels = res.apply(pd.Series.value_counts, axis=1)[[9,10,11]].fillna(0)
 
     res['level_9s'], res['level_10s'], res['level_11s'] = levels[9], levels[10], levels[11]
@@ -126,7 +141,7 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
     for col in float_col.columns.values:
         res[col] = res[col].astype('int64')
 
-    avoid_cols = ['player','tag','trophies','level_9s','level_10s','level_11s','brawlers_10','brawlers_11','date']
+    avoid_cols = ['player','tag','trophies','highest_pl_rank_score','highest_pl_rank','level_9s','level_10s','level_11s','brawlers_10','brawlers_11','date']
 
     # Gets the names of all the level 11 brawlers and aggregates into a single string, which is added as a new column 'brawlers_11'
     club_ten_list, club_eleven_list = [], []
@@ -149,7 +164,6 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
     res = res[avoid_cols]
 
     # Cleans players names to only have ascii_letters and digits
-   #res['player'] = res['player'].map(clean_player_name)
     res = res.sort_values(by=['player']).reset_index(drop=True)
 
     if include_tens=='no':
@@ -169,16 +183,31 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
             print('[Output] '+'./output/c6/'+club_name_cleaned+'_brawler_levels.csv')            
 
 
-    stats_dict = {'Club': club.name,
-                  'Club Tag': clubtag,
-                  'Total Trophies': sum(res['trophies']),
-                  'Num Members':  len(members),
-                  'Avg Trophies': int(sum(res['trophies'])/len(res)),
-                  'Avg 9s per member':round(sum(res['level_9s'])/len(res),1),
-                  'Avg 10s per member': round(sum(res['level_10s'])/len(res),1),
-                  'Avg 11s per member': round(sum(res['level_11s'])/len(res),1),
-                  'Stddev 11s': round(statistics.stdev(res['level_11s']),2)
-                 }
+    if args.get_pl_rank:
+        stats_dict = {'Club': club.name,
+                    'Club Tag': clubtag,
+                    'Total Trophies': sum(res['trophies']),
+                    'Num Members':  len(members),
+                    'Avg Trophies': int(sum(res['trophies'])/len(res)),
+                    'Avg Highest PL Rank Score':round(sum(res['highest_pl_rank_score']/len(res)),1),
+                    'Avg 9s per member':round(sum(res['level_9s'])/len(res),1),
+                    'Avg 10s per member': round(sum(res['level_10s'])/len(res),1),
+                    'Avg 11s per member': round(sum(res['level_11s'])/len(res),1),
+                    'Stddev 11s': round(statistics.stdev(res['level_11s']),2)
+                    }
+        stats_dict['Avg Highest PL Rank'] = mapping_dict[int(round(sum(res['highest_pl_rank_score']/len(res)),1))]
+
+    else:
+        stats_dict = {'Club': club.name,
+                    'Club Tag': clubtag,
+                    'Total Trophies': sum(res['trophies']),
+                    'Num Members':  len(members),
+                    'Avg Trophies': int(sum(res['trophies'])/len(res)),
+                    'Avg 9s per member':round(sum(res['level_9s'])/len(res),1),
+                    'Avg 10s per member': round(sum(res['level_10s'])/len(res),1),
+                    'Avg 11s per member': round(sum(res['level_11s'])/len(res),1),
+                    'Stddev 11s': round(statistics.stdev(res['level_11s']),2)
+                    }
     return stats_dict
     
 def shorten_brawler_string(brawler_list, truncate_num):
@@ -206,16 +235,18 @@ def get_player_stats(playertag, truncate_num):
     res['level_9s'], res['level_10s'], res['level_11s'] = len(nines), len(tens), len(elevens)
     res['brawlers_10'], res['brawlers_11'] = shorten_brawler_string(tens, truncate_num), shorten_brawler_string(elevens, truncate_num)
     res_df = pd.DataFrame(res, index=[0])
-    
     return res_df
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--tags', '-t', nargs="+", default=['2GV02VVQR','2GQRRVC20'], type=str, help='python -i main.py -t 2YQUPUYJ')
+    parser.add_argument('--tags', '-t', nargs="+", default=['2GQRRVC20'], type=str, help='python -i main.py -t 2YQUPUYJ') #'2GV02VVQR',
     parser.add_argument('--truncate',  default=60, type=int, help='yes to only list the top X brawlers, else list all')
     parser.add_argument('--include_tens', '-i',  default='no', type=str, choices=['yes','no'], help='yes to include the list of each members lv 10 brawlers')
     parser.add_argument('--include_date', '-id',  default='no', type=str, choices=['yes','no'], help='yes to include date as a column')
     parser.add_argument('--savelist', '-s', default=['2GV02VVQR','2GQRRVC20','LULY9VQ'], help='clubs to save CSV for')
+    parser.add_argument('--chrome_headless', '-c', choices=['yes','no'], default='yes', type=str, help='yes for headless chrome browser else no')
+    parser.add_argument('--get_pl_rank', '-pl', choices=['yes','no'], default='yes', type=str, help='yes to get pl ranks')
 
     args = parser.parse_args()
     tags_to_parse = args.tags
@@ -252,11 +283,11 @@ if __name__ == '__main__':
 
         stats_dict_list = []
         for clubtag in club_tags:
-            try:
+            if True:
                 temp_club_df = get_club_stats(clubtag, args.truncate, args.include_tens, args.include_date, args.savelist, save=False)
                 stats_dict_list.append(temp_club_df)
-            except:
-                print('Error for Clubtag:', clubtag)
+            # except:
+            #     print('Error for Clubtag:', clubtag)
         
         if len(stats_dict_list)>0:
             compare_stats = pd.DataFrame(stats_dict_list)

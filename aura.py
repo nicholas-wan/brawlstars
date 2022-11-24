@@ -16,6 +16,7 @@ import dataframe_image as dfi
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from pl_mapping_dict import mapping_dict
 
 warnings.filterwarnings("ignore")
 
@@ -123,7 +124,7 @@ def read_csv(gsheet_url, brawler_levels_csv, output, clubname, color_scheme, tru
         print(na)
 
     res = res.sort_values(by=['team','player'], ascending=True).reset_index(drop=True)
-    res = res[['player', 'team', 'tag', 'trophies', 'level_9s', 'level_10s', 'level_11s','brawlers_11']]
+    res = res[['player', 'team', 'tag', 'trophies', 'highest_pl_rank_score','highest_pl_rank','level_9s', 'level_10s', 'level_11s','brawlers_11']]
     res['team'] = res['team'].map(map_int)
     write_excel(res, output, clubname, color_scheme, len(na))
 
@@ -143,6 +144,7 @@ team1_q = """
 select team,
        sum(trophies)/count(trophies) as avg_trophies,
        sum(level_11s)/count(level_11s) as avg_11s,
+       sum(highest_pl_rank_score)/count(highest_pl_rank_score) as avg_highest_pl_rank_score,
        group_concat(player) as players
        from df1
        group by team
@@ -151,7 +153,8 @@ select team,
 team1 = sqldf(team1_q, globals())
 team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
 team1['rank'] = team1.index+1
-team1 = team1[['rank','players','team','avg_trophies','avg_11s']]
+team1 = team1[['rank','players','team','avg_trophies','avg_11s','avg_highest_pl_rank_score']]
+team1['avg_highest_pl_rank'] = team1['avg_highest_pl_rank_score'].map(lambda x: mapping_dict[x])
 
 color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
@@ -165,6 +168,7 @@ team2_q = """
 select team,
        sum(trophies)/count(trophies) as avg_trophies,
        sum(level_11s)/count(level_11s) as avg_11s,
+       sum(highest_pl_rank_score)/count(highest_pl_rank_score) as avg_highest_pl_rank_score,
        group_concat(player) as players
        from df2
        group by team
@@ -173,7 +177,9 @@ select team,
 team2 = sqldf(team2_q, globals())
 team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
 team2['rank'] = team2.index+1
-team2 = team2[['rank','players','team','avg_trophies','avg_11s']]
+team2 = team2[['rank','players','team','avg_trophies','avg_11s','avg_highest_pl_rank_score']]
+team2['avg_highest_pl_rank'] = team2['avg_highest_pl_rank_score'].map(lambda x: mapping_dict[x])
+
 
 def plot_bar(clubname, excel_file, sheetname, output_file):
     df = pd.read_excel(excel_file, sheet_name=sheetname,engine='openpyxl', skiprows=2)
