@@ -149,7 +149,7 @@ select team,
        group_concat(player) as players
        from df1
        group by team
-       order by avg_trophies desc, avg_11s desc
+       order by avg_pl_score desc
 """
 team1 = sqldf(team1_q, globals()).fillna(0)
 team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
@@ -175,7 +175,7 @@ select team,
        group_concat(player) as players
        from df2
        group by team
-       order by avg_trophies desc, avg_11s desc
+       order by avg_trophies desc
 """
 team2 = sqldf(team2_q, globals()).fillna('')
 team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
