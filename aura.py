@@ -124,7 +124,7 @@ def read_csv(gsheet_url, brawler_levels_csv, output, clubname, color_scheme, tru
         print(na)
 
     res = res.sort_values(by=['team','player'], ascending=True).reset_index(drop=True)
-    res = res[['player', 'team', 'tag', 'trophies', 'highest_pl_rank_score','highest_pl_rank','level_9s', 'level_10s', 'level_11s','brawlers_11']]
+    res = res[['player', 'team', 'tag', 'trophies', 'pl_score','pl_rank','level_9s', 'level_10s', 'level_11s','brawlers_11']]
     res['team'] = res['team'].map(map_int)
     write_excel(res, output, clubname, color_scheme, len(na))
 
@@ -137,6 +137,7 @@ print('[Output] '+c9_output)
 
 df1, na1  = read_csv(c9_sheet, c9_brawlers_csv, c9_output, 'C9', color_scheme)
 df1 = df1.drop(columns=['brawlers_11'], axis=1)
+df1 = df1.fillna('')
 dfi.export(df1.style.hide_index(), c9_csv_output)
 print('[Output] '+c9_csv_output)
 
@@ -144,21 +145,23 @@ team1_q = """
 select team,
        sum(trophies)/count(trophies) as avg_trophies,
        sum(level_11s)/count(level_11s) as avg_11s,
-       sum(highest_pl_rank_score)/count(highest_pl_rank_score) as avg_highest_pl_rank_score,
+       sum(pl_score)/sum(case When pl_score = 0 Then 0 Else 1 End) as avg_pl_score,
        group_concat(player) as players
        from df1
        group by team
        order by avg_trophies desc, avg_11s desc
 """
-team1 = sqldf(team1_q, globals())
+team1 = sqldf(team1_q, globals()).fillna(0)
 team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
 team1['rank'] = team1.index+1
-team1 = team1[['rank','players','team','avg_trophies','avg_11s','avg_highest_pl_rank_score']]
-team1['avg_highest_pl_rank'] = team1['avg_highest_pl_rank_score'].map(lambda x: mapping_dict[x])
+team1['avg_pl_score'] = team1['avg_pl_score'].map(int)
+team1 = team1[['rank','players','team','avg_trophies','avg_11s','avg_pl_score']]
+team1['avg_pl_rank'] = team1['avg_pl_score'].map(lambda x: mapping_dict[x])
 
 color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
 df2 = df2.drop(columns=['brawlers_11'], axis=1)
+df2 = df2.fillna('')
 dfi.export(df2.style.hide_index(), c6_csv_output)
 
 print('[Output] '+c6_output)
@@ -168,17 +171,17 @@ team2_q = """
 select team,
        sum(trophies)/count(trophies) as avg_trophies,
        sum(level_11s)/count(level_11s) as avg_11s,
-       sum(highest_pl_rank_score)/count(highest_pl_rank_score) as avg_highest_pl_rank_score,
+       sum(pl_score)/sum(case When pl_score = 0 Then 0 Else 1 End) as avg_pl_score,
        group_concat(player) as players
        from df2
        group by team
        order by avg_trophies desc, avg_11s desc
 """
-team2 = sqldf(team2_q, globals())
+team2 = sqldf(team2_q, globals()).fillna('')
 team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
 team2['rank'] = team2.index+1
-team2 = team2[['rank','players','team','avg_trophies','avg_11s','avg_highest_pl_rank_score']]
-team2['avg_highest_pl_rank'] = team2['avg_highest_pl_rank_score'].map(lambda x: mapping_dict[x])
+team2 = team2[['rank','players','team','avg_trophies','avg_11s','avg_pl_score']]
+team2['avg_pl_rank'] = team2['avg_pl_score'].map(lambda x: mapping_dict[x])
 
 
 def plot_bar(clubname, excel_file, sheetname, output_file):
@@ -215,7 +218,7 @@ dfi.export(team2.style.hide_index(), c6_team_averages_png)
 print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
-cols_to_round = ['Avg 9s per member', 'Avg 9s per member','Avg 10s per member','Avg 11s per member','Stddev 11s']
+cols_to_round = ['Avg 9s per member', 'Avg 9s per member','Avg 10s per member','Avg 11s per member','Stddev 11s','Avg PL Score']
 for col in cols_to_round:
     comparison_df[col] = comparison_df[col].astype(str)
 

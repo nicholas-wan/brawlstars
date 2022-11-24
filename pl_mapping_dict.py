@@ -1,4 +1,5 @@
-mapping_dict = {1:'Bronze I',
+mapping_dict = {0:'',
+                1:'Bronze I',
                 2:'Bronze II',
                 3:'Bronze III',
                 4:'Silver I',
