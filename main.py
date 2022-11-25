@@ -288,7 +288,7 @@ if __name__ == '__main__':
         
         if len(stats_dict_list)>0:
             compare_stats = pd.DataFrame(stats_dict_list)
-            compare_stats = compare_stats.sort_values(by=['Total Trophies'], ascending=False)
+            compare_stats = compare_stats.sort_values(by=['Avg PL Score', 'Total Trophies'], ascending=[False,False])
             compare_stats.to_csv('./output/comparison.csv', index=False)
             print(compare_stats.to_markdown(tablefmt="pretty"))
             print('[Output] ./output/comparison.csv')
