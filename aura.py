@@ -163,6 +163,7 @@ def process_team(df_value):
     team1 = team1[['rank','players','team','num_players','avg_trophies','avg_11s','pl_scores','avg_pl_score']]
     team1['avg_pl_rank'] = team1['avg_pl_score'].map(lambda x: mapping_dict[int(x)])
     team1['avg_pl_score'] = team1['avg_pl_score'].astype('str')
+    team1['num_players'] = team1['num_players'].map(lambda x: str(x)+' / 3')
     return team1
 
 team1 = process_team('df1')
