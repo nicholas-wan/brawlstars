@@ -239,52 +239,57 @@ def add_margin(pil_img, top, right, bottom, left, color):
     result.paste(pil_img, (left, top))
     return result
 
-def pad_add_text(image_path, margin, font_size, text_xy, text_value, output_path, color, border_size):
+def pad_add_text(image_path, margin, font_size, text_y, text_value, output_path, color, border_size):
     im = Image.open(image_path)
     im = add_margin(im, margin[0], margin[1], margin[2], margin[3], 'white')
     im = add_margin(im, border_size, border_size, border_size, border_size, color)
-    im_new = ImageDraw.Draw(im)
+    
+    W, H = im.size
+    draw = ImageDraw.Draw(im)
     font = ImageFont.truetype('font/OpenSans-Bold.ttf', font_size)
-    im_new.text((text_xy[0], text_xy[1]), text_value, font = font, fill =(0,0,0))
+    w, h = draw.textsize(text_value, font=font)
+
+    draw.text(((W-w)/2, 25), text_value, fill="black", font=font)
     im.save(output_path)
     print('[Format]', output_path)
 
-def add_image(img1_path, img2_path, coord, resize_factor):
+def add_image(img1_path, img2_path, y_coord, resize_factor):
     img1 = Image.open(img1_path)
     img2 = Image.open(img2_path).convert("RGBA")
     
     if resize_factor!=1:
         width, height = img2.size
         img2 = img2.resize((int(width//resize_factor), int(height//resize_factor)))
-    img1.paste(img2, (coord[0], coord[1]), mask = img2)
+    
+    img1.paste(img2, (img1.size[0]-img2.size[0]-int(0.03*img1.size[0]), y_coord), mask = img2)
     img1.save(img1_path)
 
 
 # Full Stats
-pad_add_text(c9_csv_output, [80, 20, 20, 20], 45, (170, 25), "<C9> Full Stats", c9_csv_output, 'maroon', 20)
-pad_add_text(c6_csv_output, [80, 20, 20, 20], 45, (170, 25), "<C6> Full Stats", c6_csv_output, 'navy', 20)
+pad_add_text(c9_csv_output, [80, 20, 20, 20], 45, 25, "<C9> Full Stats", c9_csv_output, 'maroon', 20)
+pad_add_text(c6_csv_output, [80, 20, 20, 20], 45, 25, "<C6> Full Stats", c6_csv_output, 'navy', 20)
 
-add_image(c9_csv_output, './misc_images/masters.png', (530, 2), 8 )
-add_image(c6_csv_output, './misc_images/masters.png', (555, 2), 8 )
+add_image(c9_csv_output, './misc_images/masters.png', 2, 8 )
+add_image(c6_csv_output, './misc_images/masters.png', 2, 8 )
 
 # Comparison
-pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, (265, 25), "<C9> & <C6> Comparison Stats", comparison_c9_png, 'maroon', 15)
-pad_add_text(comparison_c6_png, [93, 20, 20, 20], 40, (265, 25), "<C9> & <C6> Comparison Stats", comparison_c6_png, 'navy', 15)
+pad_add_text(comparison_c9_png, [93, 20, 20, 20], 40, 25, "<C9> & <C6> Comparison Stats", comparison_c9_png, 'maroon', 15)
+pad_add_text(comparison_c6_png, [93, 20, 20, 20], 40, 25, "<C9> & <C6> Comparison Stats", comparison_c6_png, 'navy', 15)
 
-add_image(comparison_c9_png, './misc_images/club_logo.png', (1005, 25), 6 )
-add_image(comparison_c6_png, './misc_images/club_logo.png', (1005, 25), 6 )
+add_image(comparison_c9_png, './misc_images/club_logo.png', 25, 6 )
+add_image(comparison_c6_png, './misc_images/club_logo.png', 25, 6 )
 
 # Barchart
-pad_add_text(c9_barchart, [25, 0, 20, 0], 70, (445, 40), "<C9> Number of Power 11 Brawlers", c9_barchart, 'maroon', 30)
-pad_add_text(c6_barchart, [25, 0, 20, 0], 70, (445, 40), "<C6> Number of Power 11 Brawlers", c6_barchart, 'navy', 30)
+pad_add_text(c9_barchart, [25, 0, 20, 0], 70, 40, "<C9> Number of Power 11 Brawlers", c9_barchart, 'maroon', 30)
+pad_add_text(c6_barchart, [25, 0, 20, 0], 70, 40, "<C6> Number of Power 11 Brawlers", c6_barchart, 'navy', 30)
 
 # add nita logo to barchart
-add_image(c9_barchart, './misc_images/nita_brawler_levels.png', (1925,50),1.5)
-add_image(c6_barchart, './misc_images/nita_brawler_levels.png', (1925,50),1.5)
+add_image(c9_barchart, './misc_images/nita_brawler_levels.png', 50,1.5)
+add_image(c6_barchart, './misc_images/nita_brawler_levels.png', 50,1.5)
 
 # Team Averages
-pad_add_text(c9_team_averages_png, [60, 20, 20, 20], 22, (200, 12), "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
-pad_add_text(c6_team_averages_png, [60, 20, 20, 20], 22, (200, 12), "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
+pad_add_text(c9_team_averages_png, [60, 20, 20, 20], 22, 12, "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
+pad_add_text(c6_team_averages_png, [60, 20, 20, 20], 22, 12, "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
 
-add_image(c9_team_averages_png, './misc_images/rank.png', (560,15),4)
-add_image(c6_team_averages_png, './misc_images/rank.png', (540,15),4)
+add_image(c9_team_averages_png, './misc_images/rank.png', 15, 4)
+add_image(c6_team_averages_png, './misc_images/rank.png', 15, 4)
