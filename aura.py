@@ -141,22 +141,30 @@ df1 = df1.fillna('')
 dfi.export(df1.style.hide_index(), c9_csv_output)
 print('[Output] '+c9_csv_output)
 
-team1_q = """
+team_q_standard = """
 select team,
+       count(*) as num_players,
        sum(trophies)/count(trophies) as avg_trophies,
        sum(level_11s)/count(level_11s) as avg_11s,
-       sum(pl_score)/sum(case When pl_score = 0 Then 0 Else 1 End) as avg_pl_score,
+       ROUND(AVG(CASE WHEN pl_score <> 0 THEN pl_score ELSE NULL END),1) as avg_pl_score,
        group_concat(player) as players
-       from df1
+       from df
        group by team
-       order by avg_pl_score desc
+       order by avg_pl_score desc, avg_trophies desc
 """
-team1 = sqldf(team1_q, globals()).fillna(0)
-team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
-team1['rank'] = team1.index+1
-team1['avg_pl_score'] = team1['avg_pl_score'].map(int)
-team1 = team1[['rank','players','team','avg_trophies','avg_11s','avg_pl_score']]
-team1['avg_pl_rank'] = team1['avg_pl_score'].map(lambda x: mapping_dict[x])
+
+def process_team(df_value):
+    team_q = team_q_standard.replace('df',df_value)
+    team1 = sqldf(team_q, globals()).fillna(0)
+    team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
+    team1['rank'] = team1.index+1
+    team1['avg_pl_score'] = team1['avg_pl_score']
+    team1 = team1[['rank','players','team','num_players','avg_trophies','avg_11s','avg_pl_score']]
+    team1['avg_pl_rank'] = team1['avg_pl_score'].map(lambda x: mapping_dict[int(x)])
+    team1['avg_pl_score'] = team1['avg_pl_score'].astype('str')
+    return team1
+
+team1 = process_team('df1')
 
 color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
@@ -167,22 +175,7 @@ dfi.export(df2.style.hide_index(), c6_csv_output)
 print('[Output] '+c6_output)
 print('[Output] '+c6_csv_output)
 
-team2_q = """
-select team,
-       sum(trophies)/count(trophies) as avg_trophies,
-       sum(level_11s)/count(level_11s) as avg_11s,
-       sum(pl_score)/sum(case When pl_score = 0 Then 0 Else 1 End) as avg_pl_score,
-       group_concat(player) as players
-       from df2
-       group by team
-       order by avg_pl_score desc
-"""
-team2 = sqldf(team2_q, globals()).fillna('')
-team2['players'] = team2['players'].map(lambda x: x.replace(',', ', '))
-team2['rank'] = team2.index+1
-team2 = team2[['rank','players','team','avg_trophies','avg_11s','avg_pl_score']]
-team2['avg_pl_rank'] = team2['avg_pl_score'].map(lambda x: mapping_dict[x])
-
+team2 = process_team('df2')
 
 def plot_bar(clubname, excel_file, sheetname, output_file):
     df = pd.read_excel(excel_file, sheet_name=sheetname,engine='openpyxl', skiprows=2)
