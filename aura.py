@@ -249,7 +249,7 @@ def pad_add_text(image_path, margin, font_size, text_y, text_value, output_path,
     font = ImageFont.truetype('font/OpenSans-Bold.ttf', font_size)
     w, h = draw.textsize(text_value, font=font)
 
-    draw.text(((W-w)/2, 25), text_value, fill="black", font=font)
+    draw.text(((W-w)/2, text_y), text_value, fill="black", font=font)
     im.save(output_path)
     print('[Format]', output_path)
 
@@ -288,8 +288,8 @@ add_image(c9_barchart, './misc_images/nita_brawler_levels.png', 50,1.5)
 add_image(c6_barchart, './misc_images/nita_brawler_levels.png', 50,1.5)
 
 # Team Averages
-pad_add_text(c9_team_averages_png, [60, 20, 20, 20], 22, 12, "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
-pad_add_text(c6_team_averages_png, [60, 20, 20, 20], 22, 12, "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
+pad_add_text(c9_team_averages_png, [60, 20, 20, 20], 28, 20, "<C9> Team Averages", c9_team_averages_png, 'maroon', 8)
+pad_add_text(c6_team_averages_png, [60, 20, 20, 20], 28, 20, "<C6> Team Averages", c6_team_averages_png, 'navy', 8)
 
 add_image(c9_team_averages_png, './misc_images/rank.png', 15, 4)
 add_image(c6_team_averages_png, './misc_images/rank.png', 15, 4)
