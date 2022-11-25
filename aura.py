@@ -35,8 +35,8 @@ c6_team_averages_png = './output/c6/c6_team_averages.png'
 c6_barchart = './output/c6/c6_barchart.jpg'
 
 comparison = './output/comparison.csv'
-comparison_c6_png = './output/c6/comparison.png'
-comparison_c9_png = './output/c9/comparison.png'
+comparison_c6_png = './output/c6/c6_comparison.png'
+comparison_c9_png = './output/c9/c9_comparison.png'
 
 def clean_string(s):
     try:
@@ -218,7 +218,7 @@ dfi.export(team2.style.hide_index(), c6_team_averages_png)
 print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
-cols_to_round = ['Avg 9s per member', 'Avg 9s per member','Avg 10s per member','Avg 11s per member','Stddev 11s','Avg PL Score']
+cols_to_round = ['Avg 9s', 'Avg 9s','Avg 10s','Avg 11s','Stddev 11s','Avg PL Score']
 for col in cols_to_round:
     comparison_df[col] = comparison_df[col].astype(str)
 

@@ -187,9 +187,9 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
                     'Num Members':  len(members),
                     'Avg Trophies': int(sum(res['trophies'])/len(res)),
                     'Avg PL Score':round(sum(res['pl_score']/len(res[res['pl_score']!=0])),1),
-                    'Avg 9s per member':round(sum(res['level_9s'])/len(res),1),
-                    'Avg 10s per member': round(sum(res['level_10s'])/len(res),1),
-                    'Avg 11s per member': round(sum(res['level_11s'])/len(res),1),
+                    'Avg 9s':round(sum(res['level_9s'])/len(res),1),
+                    'Avg 10s': round(sum(res['level_10s'])/len(res),1),
+                    'Avg 11s': round(sum(res['level_11s'])/len(res),1),
                     'Stddev 11s': round(statistics.stdev(res['level_11s']),2)
                     }
         stats_dict['Avg PL Rank'] = mapping_dict[int(stats_dict['Avg PL Score'])]
@@ -200,9 +200,9 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
                     'Total Trophies': sum(res['trophies']),
                     'Num Members':  len(members),
                     'Avg Trophies': int(sum(res['trophies'])/len(res)),
-                    'Avg 9s per member':round(sum(res['level_9s'])/len(res),1),
-                    'Avg 10s per member': round(sum(res['level_10s'])/len(res),1),
-                    'Avg 11s per member': round(sum(res['level_11s'])/len(res),1),
+                    'Avg 9s':round(sum(res['level_9s'])/len(res),1),
+                    'Avg 10s': round(sum(res['level_10s'])/len(res),1),
+                    'Avg 11s': round(sum(res['level_11s'])/len(res),1),
                     'Stddev 11s': round(statistics.stdev(res['level_11s']),2)
                     }
     return stats_dict
@@ -289,6 +289,7 @@ if __name__ == '__main__':
         if len(stats_dict_list)>0:
             compare_stats = pd.DataFrame(stats_dict_list)
             compare_stats = compare_stats.sort_values(by=['Avg PL Score', 'Total Trophies'], ascending=[False,False])
+            compare_stats = compare_stats[['Club','Club Tag','Total Trophies','Num Members','Avg Trophies','Avg 9s','Avg 10s','Avg 11s','Stddev 11s','Avg PL Score','Avg PL Rank']]
             compare_stats.to_csv('./output/comparison.csv', index=False)
             print(compare_stats.to_markdown(tablefmt="pretty"))
             print('[Output] ./output/comparison.csv')
