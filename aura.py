@@ -146,6 +146,7 @@ select team,
        count(*) as num_players,
        sum(trophies)/count(trophies) as avg_trophies,
        sum(level_11s)/count(level_11s) as avg_11s,
+       group_concat(pl_score) as pl_scores,
        ROUND(AVG(CASE WHEN pl_score <> 0 THEN pl_score ELSE NULL END),1) as avg_pl_score,
        group_concat(player) as players
        from df
@@ -159,7 +160,7 @@ def process_team(df_value):
     team1['players'] = team1['players'].map(lambda x: x.replace(',', ', '))
     team1['rank'] = team1.index+1
     team1['avg_pl_score'] = team1['avg_pl_score']
-    team1 = team1[['rank','players','team','num_players','avg_trophies','avg_11s','avg_pl_score']]
+    team1 = team1[['rank','players','team','num_players','avg_trophies','avg_11s','pl_scores','avg_pl_score']]
     team1['avg_pl_rank'] = team1['avg_pl_score'].map(lambda x: mapping_dict[int(x)])
     team1['avg_pl_score'] = team1['avg_pl_score'].astype('str')
     return team1
