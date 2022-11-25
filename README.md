@@ -61,7 +61,7 @@ Outputs files to `/output/c9` or `/output/c6`
 
 #### 2.2.1 Aura Sample Output
 
-<img src="./output/c9/comparison.png" width="500" />
+<img src="./output/c9/c9_comparison.png" width="500" />
 
 Comparison Statistics for different clubs. More clubs can be added. At a glance, shows the average <b>Trophy Level</b> for the members of the club and the average number of <b>Power Level 11 brawlers</b> for each member. Used at the start of <b>Club League</b> to get an indicative strength of opponents
 
