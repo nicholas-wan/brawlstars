@@ -32,7 +32,8 @@ for i in tqdm(range(len(df))):
     highest_pl_scores.append(get_highest_pl_score(df['tag'].iloc[i]))
 
 df['highest_pl_score'] = highest_pl_scores
-df['hightest_pl_rank'] = df['highest_pl_score'].map(lambda x: mapping_dict[x])
+df['highest_pl_rank'] = df['highest_pl_score'].map(lambda x: mapping_dict[x])
 
-df = df.sort_values(by=['highest_pl_score','pl_score'], ascending=[False,False]).reset_index(drop=True)
+df = df.sort_values(by=['highest_pl_score','pl_score','trophies'], ascending=[False,False,False]).reset_index(drop=True)
+df = df[['player', 'tag', 'trophies', 'level_11s', 'pl_score', 'pl_rank','highest_pl_score', 'highest_pl_rank']]
 df.to_csv('./output/c9/c9aurac_pl_ranks.csv', index=False)
