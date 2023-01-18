@@ -85,11 +85,14 @@ def classify_tags(tags):
     invalid_tags = []
 
     for tag in tags:
+        valid_tag = False
         if valid_club_tag(tag):
             club_tags.append(tag)
+            valid_tag = True
         if valid_player_tag(tag):
             player_tags.append(tag)
-        else:
+            valid_tag = True
+        if valid_tag is False:
             invalid_tags.append(tag)
     return player_tags, club_tags, invalid_tags
 
