@@ -28,8 +28,6 @@ def clean_brawlers_string(s):
 def clean_brawler_name(brawler):
     if brawler=='8-Bit':
         return brawler
-    elif brawler=='Mr. P':
-        return 'Mr.P'
     elif 'Colonel' in brawler or 'Ruffs' in brawler:
         return 'Ruffs'
     else:
