@@ -1,0 +1,24 @@
+Starting Multithreading to get Battle logs
+--- 20.202539920806885 seconds ---
+Old Data Size: 4588
+New Data Size: 4593
+Starting Multithreading to get Battle logs
+--- 22.753592014312744 seconds ---
+Old Data Size: 4593
+New Data Size: 4628
+Starting Multithreading to get Battle logs
+--- 21.26781392097473 seconds ---
+Old Data Size: 4628
+New Data Size: 4640
+Starting Multithreading to get Battle logs
+--- 20.97019910812378 seconds ---
+Old Data Size: 4640
+New Data Size: 4720
+Starting Multithreading to get Battle logs
+--- 18.13793396949768 seconds ---
+Old Data Size: 4720
+New Data Size: 4851
+Starting Multithreading to get Battle logs
+--- 18.571681022644043 seconds ---
+Old Data Size: 4851
+New Data Size: 4890

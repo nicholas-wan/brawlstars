@@ -2,6 +2,7 @@ import brawlstats
 import time
 import requests
 import pandas as pd
+import os
 from bs4 import BeautifulSoup
 import json
 from tqdm import tqdm 
@@ -57,7 +58,6 @@ def get_brawler_name(team_data, player_tag):
         if player['tag'].replace('#','')==player_tag:
             return player['brawler']['name']
 
-battles_df = battles_df[['event.map','battle.result','battle.teams','player_tag']]
 battles_df = battles_df.dropna(subset=['battle.teams','event.map'])
 battles_df['brawler_name']  = battles_df.apply(lambda x: get_brawler_name(x['battle.teams'], x['player_tag']), axis=1)
 
@@ -69,8 +69,17 @@ pl_maps = [ 'Hard Rock Mine', 'Double Swoosh', 'Crystal Arcade',
             'Goldarm Gulch', 'Belles Rock','Out in the Open']
 battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("'",''))
 battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
-battles_df = battles_df[['event.map','battle.result','brawler_name']]
 battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
+battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
+
+if os.path.exists('battle_logs/battle_logs.csv'):
+    old = pd.read_csv('battle_logs/battle_logs.csv')
+    print('Old Data Size:', len(old))
+    battles_df = pd.concat([battles_df, old])
+
+battles_df = battles_df[['battle_time','event.map','battle.result','player_tag','brawler_name']].drop_duplicates().reset_index(drop=True)
+battles_df.to_csv('battle_logs/battle_logs.csv', index=False)
+print('New Data Size:', len(battles_df))
 
 maps = []
 
@@ -100,4 +109,3 @@ reference['map'] = reference['map'].map(lambda x: str.lower(x))
 res = res.merge(reference, on='map')
 res['gamemodes'] = res['gamemodes'].map(lambda x: str.lower(x))
 res.to_csv('maps/pro_battles.csv', index=False)
-print(res)

@@ -287,7 +287,7 @@ options = {
 def df_to_png(df, output_png):
     write_to_html_file(df, filename='temp.html')
     imgkit.from_file('temp.html', output_png, options=options)
-    if 'infographics1_pro.png' in output_png:
+    if 'infographics1.png' in output_png:
         img = Image.open(output_png)
         w, h = img.size
         img.crop((0,0,w-375,h)).save(output_png)
