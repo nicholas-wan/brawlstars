@@ -75,9 +75,10 @@ Barchart of number of <b>Power Level 11 brawlers</b> for each member in the club
 
 #### 2.3. Infographics
 
-Uses selenium to web scrape https://brawlify.com/ to generate infographics. Has 2 important parameters. <br>(Will take 30s - 1 min per map.)
+Obtains battle logs from top 200 players globally based on Solo PL rank.
 ```
-python generate_infographics.py --refresh_stats yes
+python top_pl_players.py
+python generate_infographics_pro.py 
 ```
 
 Outputs infographics in `/output/infographics`
@@ -87,7 +88,7 @@ Outputs infographics in `/output/infographics`
 <img src="./output/infographics/infographics2.png" width="600" />
 <img src="./output/infographics/infographics3.png" width="600" />
 
-Shows the best brawlers for all <b> 18 Power / Club League </b> maps in two single images. Useful for anyone during drafting phase for Picks and Bans. Originally, this information is available on brawlify.com but is available on many different pages, hence the need to combine them for easier usage, thus this project web-scrapes and consolidates the information
+Shows the best brawlers for all <b> 18 Power / Club League </b> maps in two single images. Useful for anyone during drafting phase for Picks and Bans. Shown in order of USAGE RATES.
 
 <img src="./output/infographics/infographics1.png" width="600" />
 
