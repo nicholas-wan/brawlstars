@@ -7,6 +7,11 @@ from bs4 import BeautifulSoup
 import json
 from tqdm import tqdm 
 from multiprocessing.dummy import Pool as ThreadPool 
+from datetime import datetime
+
+print('=============================')
+now = datetime.now() 
+print("Current Time", now)
 
 url = 'http://brawlace.com/rankings-power-league'
 r = requests.get(url)
@@ -109,3 +114,4 @@ reference['map'] = reference['map'].map(lambda x: str.lower(x))
 res = res.merge(reference, on='map')
 res['gamemodes'] = res['gamemodes'].map(lambda x: str.lower(x))
 res.to_csv('maps/pro_battles.csv', index=False)
+print('=============================\n')

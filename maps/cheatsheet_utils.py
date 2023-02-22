@@ -10,11 +10,12 @@ from PIL import ImageOps, Image
 ### Params ###
 ##############
 
+project_directory = os.getcwd()
 best_brawlers = 12
-images_dir = './maps/brawler_images'
+images_dir = os.path.join(project_directory, 'maps/brawler_images')
 images_path = os.listdir(images_dir)
-gamemodes_dir = './maps/gamemode_images'
-brawler_data_csv = './maps/pro_battles.csv'
+gamemodes_dir = os.path.join(project_directory, 'maps/gamemode_images')
+brawler_data_csv = os.path.join(project_directory, 'maps/pro_battles.csv')
 
 def clean_brawlers_string(s):
     try:
@@ -285,12 +286,14 @@ options = {
 }
 
 def df_to_png(df, output_png):
-    write_to_html_file(df, filename='temp.html')
-    imgkit.from_file('temp.html', output_png, options=options)
+    print('Writing Image for:', output_png)
+    html_file=os.path.join(project_directory, 'temp.html')
+    write_to_html_file(df, filename=html_file)
+    imgkit.from_file(html_file, output_png, options=options)
     if 'infographics1.png' in output_png:
         img = Image.open(output_png)
         w, h = img.size
-        img.crop((0,0,w-375,h)).save(output_png)
+        img.crop((0,0,w-370,h)).save(output_png)
 
-    os.remove('temp.html')
+    os.remove(html_file)
     print('Complete, image saved to:', output_png)
