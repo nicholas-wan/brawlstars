@@ -13,18 +13,29 @@ print('=============================')
 now = datetime.now() 
 print("Current Time", now)
 
-url = 'http://brawlace.com/rankings-power-league'
-r = requests.get(url)
+refresh_playertags = 'yes'
 
-html_table = BeautifulSoup(r.text, features="lxml").find('table')
-r.close()
+if refresh_playertags == 'yes':
+    def get_df(url, num_players):
+        r = requests.get(url)
+        html_table = BeautifulSoup(r.text, features="lxml").find('table')
+        r.close()
+        df = pd.read_html(str(html_table), header=0)[0].head(num_players)
+        df['Link'] = [link.get('href') for link in html_table.find_all('a')][:num_players]
+        df['player_tag'] = df['Link'].map(lambda x: x.split('%')[-1][2:])
+        df = df[['Name','player_tag']]
+        return df
 
-best_players_df = pd.read_html(str(html_table), header=0)[0]
-best_players_df['Link'] = [link.get('href') for link in html_table.find_all('a')]
-best_players_df['player_tag'] = best_players_df['Link'].map(lambda x: x.split('%')[-1][2:])
+    gsheet_url='https://docs.google.com/spreadsheets/d/10eVCxmE2XDpqlbBOR5hKI_wlZDtTmKbCt48v8RCy-iM/gviz/tq?tqx=out:csv&gid=32930413'
+    best_countries_df = pd.read_csv(gsheet_url, usecols=['url','num_players'])
 
-best_players_df = best_players_df[['Name','Club','player_tag']]
-best_players_df.to_csv('output/best_pl_players.csv', index=False)
+    countries = []
+    for i in tqdm(range(len(best_countries_df))):
+        countries.append(get_df(best_countries_df.iloc[i]['url'], best_countries_df.iloc[i]['num_players']))
+    best_players_df = pd.concat(countries).drop_duplicates().reset_index(drop=True)
+    best_players_df.to_csv('output/best_pl_players.csv', index=False)
+else:
+    best_players_df = pd.read_csv('output/best_pl_players.csv')
 
 api_key = "api_key.txt"
 # Insert your Brawl Stars Developer's API Key into a file in the same directory 'api_key.txt'
@@ -39,13 +50,16 @@ def filter_records(df):
     return df
 
 def get_battle_records(player_tag):
-    b = client.get_battle_logs(player_tag, use_cache=False )
-    df = pd.DataFrame.from_records(b)
-    json_struct = json.loads(df.to_json(orient="records"))    
-    df_flat = pd.json_normalize(json_struct)
-    df_flat['player_tag'] = player_tag
-    df_flat = filter_records(df_flat)
-    return df_flat
+    try:
+        b = client.get_battle_logs(player_tag, use_cache=False )
+        df = pd.DataFrame.from_records(b)
+        json_struct = json.loads(df.to_json(orient="records"))    
+        df_flat = pd.json_normalize(json_struct)
+        df_flat['player_tag'] = player_tag
+        df_flat = filter_records(df_flat)
+        return df_flat
+    except:
+        pass
 
 pool = ThreadPool(4) 
 start_time = time.time()
@@ -76,13 +90,12 @@ battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("'",''
 battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
 battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
 battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
+battles_df['battle_time'] = battles_df['battle_time'].map(lambda x: x.strftime("%m/%d/%Y %H:%M:%S"))
+battles_df = battles_df[['battle_time','event.map','battle.result','player_tag','brawler_name']]
 
-if os.path.exists('battle_logs/battle_logs.csv'):
-    old = pd.read_csv('battle_logs/battle_logs.csv')
-    print('Old Data Size:', len(old))
-    battles_df = pd.concat([battles_df, old])
-
-battles_df = battles_df[['battle_time','event.map','battle.result','player_tag','brawler_name']].drop_duplicates().reset_index(drop=True)
+old = pd.read_csv('battle_logs/battle_logs.csv')
+print('Old Data Size:', len(old))
+battles_df = pd.concat([battles_df, old]).drop_duplicates().reset_index(drop=True)
 battles_df.to_csv('battle_logs/battle_logs.csv', index=False)
 print('New Data Size:', len(battles_df))
 

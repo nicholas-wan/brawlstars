@@ -37,4 +37,9 @@ cheatsheet_part2 = cheatsheet.fillna('   ').tail(len(cheatsheet)-9)
 print('Generating page 2 & 3')
 df_to_png(cheatsheet_part1, os.path.join(infographics_output_folder, 'infographics2.png'))
 df_to_png(cheatsheet_part2, os.path.join(infographics_output_folder, 'infographics3.png'))
+
+copyright_apply('output/infographics/infographics1.png','output/infographics/infographics1.png','@ZSilverZ')
+copyright_apply('output/infographics/infographics2.png','output/infographics/infographics2.png','@ZSilverZ')
+copyright_apply('output/infographics/infographics3.png','output/infographics/infographics3.png','@ZSilverZ')
+
 print('Complete')

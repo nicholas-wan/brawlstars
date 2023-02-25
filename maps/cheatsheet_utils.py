@@ -4,7 +4,7 @@ from IPython.display import HTML
 import itertools
 import imgkit
 import pandas.io.formats.style
-from PIL import ImageOps, Image
+from PIL import ImageOps, Image, ImageDraw, ImageFont
 
 ##############
 ### Params ###
@@ -108,12 +108,16 @@ def get_best_brawlers(num_best_brawlers):
         df.columns = ['brawlers','score']
         df = df.sort_values(by=['score'],ascending=False).reset_index(drop=True)
         df.index+=1
+        df['brawler_names'] = df['brawlers']
         df['brawlers'] = df['brawlers'].map(lambda x: images[x])
         return df
 
     df = pd.DataFrame.from_dict([brawlers_freq]).T.reset_index()
     df = print_dataframe(df)
-    df.columns = ['brawlers','frequency']
+    df.columns = ['brawlers','frequency','brawler_names']
+
+    rates = calculate_rates()
+    df = df.merge(rates, on='brawler_names', how='left')
 
     df2 = pd.DataFrame.from_dict([brawlers]).T.reset_index()
     df2 = print_dataframe(df2)
@@ -146,7 +150,6 @@ def get_best_brawlers(num_best_brawlers):
         return df
 
     best_maps = get_best_maps()
-
     df3 = df.merge(df2, on=['brawlers']).head(num_best_brawlers)
     df4 = df3.merge(best_maps, on=['brawlers'])
 
@@ -164,17 +167,16 @@ def get_best_brawlers(num_best_brawlers):
     df4['mode2'] = df4['best_map2'].map(lambda x: images[gamemode_dict[x]])
     df4['mode3'] = df4['best_map3'].map(lambda x: images[gamemode_dict[x]])
     
-    df4 = df4[['brawlers','frequency','score','mode1','best_map1','mode2','best_map2','mode3','best_map3']]
-    df4.columns = ['brawlers','freq','weighted_score','1','bestmap1','2','bestmap2','3','bestmap3']
+    df4 = df4[['brawlers','frequency','score','overall_win_rate','overall_use_rate','mode1','best_map1','mode2','best_map2','mode3','best_map3']]
+    df4.columns = ['brawlers','freq','weighted_score','overall_win_rate','overall_use_rate','1','bestmap1','2','bestmap2','3','bestmap3']
     df4 = df4.sort_values(by=['freq', 'weighted_score'], ascending=False).reset_index(drop=True)
     df4.index+=1
 
-    
     df4['brawlers'] = df4['brawlers'].map(lambda x: path_to_image_html(x, width=40))
     for num in [str(x) for x in range(1, 4)]:
         df4[num] = df4[num].map(lambda x: path_to_image_html(x, width=30))
 
-    df4.columns = ['brawlers','freq','weighted_score','','bestmap1','','bestmap2','','bestmap3']
+    df4.columns = ['brawlers','freq','weighted_score','overall_win_rate','overall_use_rate','','bestmap1','','bestmap2','','bestmap3']
 
     return df4
 
@@ -224,6 +226,23 @@ def get_images_dict():
     return images
 
 images = get_images_dict()
+
+def calculate_rates():
+    df = pd.read_csv(os.path.join(project_directory, 'battle_logs/battle_logs.csv'))
+
+    res = []
+    unique_brawlers = set(df['brawler_name'])
+    for brawler in unique_brawlers:
+        temp_df = df[df['brawler_name']==brawler]
+        victories = len(temp_df[temp_df['battle.result']=='victory'])
+        win_rate = victories / len(temp_df)
+        win_rate = str(round(win_rate*100,1))+'%'
+        use_rate = len(temp_df) / len(df)
+        use_rate = str(round(use_rate*100,1))+'%'
+        res.append({'brawler_names':str.lower(brawler), 'overall_win_rate':win_rate,'overall_use_rate':use_rate})
+
+    res = pd.DataFrame(res)
+    return res
 
 def write_to_html_file(df, title='', filename='out.html'):
     '''
@@ -293,7 +312,36 @@ def df_to_png(df, output_png):
     if 'infographics1.png' in output_png:
         img = Image.open(output_png)
         w, h = img.size
-        img.crop((0,0,w-370,h)).save(output_png)
+        img.crop((0,0,w-150,h)).save(output_png)
 
     os.remove(html_file)
     print('Complete, image saved to:', output_png)
+
+
+def copyright_apply(input_image_path,
+                   output_image_path,
+                   text):
+    photo = Image.open(input_image_path)
+    
+    #Store image width and height
+    w, h = photo.size
+    
+    # make the image editable
+    drawing = ImageDraw.Draw(photo)
+    font = ImageFont.truetype("font/OpenSans-Bold.ttf", 18)
+    
+    #get text width and height
+    text = text + " "
+    text_w, text_h = drawing.textsize(text, font)
+    
+    pos = w - text_w, (h - text_h) - 10
+    
+    c_text = Image.new('RGB', (text_w, (text_h)), color = '#000000')
+    drawing = ImageDraw.Draw(c_text)
+    
+    drawing.text((0,0), text, fill="#ffffff", font=font)
+    c_text.putalpha(100)
+   
+    photo.paste(c_text, pos, c_text)
+    photo.save(output_image_path)
+    

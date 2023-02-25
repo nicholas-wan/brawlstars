@@ -1,33 +1,136 @@
 =============================
-
-Current Time 2023-02-23 01:20:01.305859
+Current Time 2023-02-23 10:00:05.041349
 Starting Multithreading to get Battle logs
---- 19.37906789779663 seconds ---
-Old Data Size: 5038
-New Data Size: 5048
-=============================
-
-=============================
-Current Time 2023-02-23 01:25:01.162632
-Starting Multithreading to get Battle logs
---- 18.23556089401245 seconds ---
-Old Data Size: 5048
-New Data Size: 5062
+--- 19.963982105255127 seconds ---
+Old Data Size: 5400
+New Data Size: 5223
 =============================
 
 =============================
-Current Time 2023-02-23 01:30:01.038983
+Current Time 2023-02-23 10:01:59.333146
 Starting Multithreading to get Battle logs
---- 18.334150075912476 seconds ---
-Old Data Size: 5062
-New Data Size: 5090
+--- 16.34539794921875 seconds ---
+Old Data Size: 5223
+New Data Size: 6113
 =============================
 
 =============================
-Current Time 2023-02-23 01:35:01.109541
+Current Time 2023-02-23 10:03:32.450993
 Starting Multithreading to get Battle logs
---- 18.24315118789673 seconds ---
-Old Data Size: 5090
-New Data Size: 5114
+--- 16.79442024230957 seconds ---
+Old Data Size: 6113
+New Data Size: 6116
+=============================
+
+=============================
+Current Time 2023-02-23 10:05:29.580039
+Starting Multithreading to get Battle logs
+--- 18.654501914978027 seconds ---
+Old Data Size: 6116
+New Data Size: 6117
+=============================
+
+=============================
+Current Time 2023-02-23 10:06:33.721422
+Starting Multithreading to get Battle logs
+--- 17.732362985610962 seconds ---
+Old Data Size: 6117
+New Data Size: 6119
+=============================
+
+=============================
+Current Time 2023-02-23 12:00:03.707765
+Starting Multithreading to get Battle logs
+--- 17.517569065093994 seconds ---
+Old Data Size: 6119
+New Data Size: 6116
+=============================
+
+=============================
+Current Time 2023-02-23 12:16:05.504444
+Starting Multithreading to get Battle logs
+--- 18.26387596130371 seconds ---
+Old Data Size: 6116
+New Data Size: 6324
+=============================
+
+=============================
+Current Time 2023-02-23 12:27:14.829467
+Starting Multithreading to get Battle logs
+--- 16.900869846343994 seconds ---
+Old Data Size: 4306
+New Data Size: 6337
+=============================
+
+=============================
+Current Time 2023-02-23 14:00:01.735651
+Starting Multithreading to get Battle logs
+--- 21.142658233642578 seconds ---
+Old Data Size: 4385
+New Data Size: 4450
+=============================
+
+=============================
+Current Time 2023-02-23 16:00:02.056846
+Starting Multithreading to get Battle logs
+--- 17.64612317085266 seconds ---
+Old Data Size: 4450
+New Data Size: 4467
+=============================
+
+=============================
+Current Time 2023-02-23 18:00:02.046492
+Starting Multithreading to get Battle logs
+--- 19.53383207321167 seconds ---
+Old Data Size: 4467
+New Data Size: 4493
+=============================
+
+=============================
+Current Time 2023-02-23 20:00:03.324477
+Starting Multithreading to get Battle logs
+--- 125.04351997375488 seconds ---
+Old Data Size: 15646
+New Data Size: 15942
+=============================
+
+=============================
+Current Time 2023-02-23 22:00:03.398462
+Starting Multithreading to get Battle logs
+--- 167.009690284729 seconds ---
+Old Data Size: 16563
+New Data Size: 17808
+=============================
+
+=============================
+Current Time 2023-02-24 00:00:02.696356
+Starting Multithreading to get Battle logs
+--- 167.39358615875244 seconds ---
+Old Data Size: 17808
+New Data Size: 20599
+=============================
+
+=============================
+Current Time 2023-02-24 02:00:10.680083
+Starting Multithreading to get Battle logs
+--- 120.57519817352295 seconds ---
+Old Data Size: 20599
+New Data Size: 23139
+=============================
+
+=============================
+Current Time 2023-02-25 00:00:10.743245
+Starting Multithreading to get Battle logs
+--- 105.05153298377991 seconds ---
+Old Data Size: 23139
+New Data Size: 31670
+=============================
+
+=============================
+Current Time 2023-02-25 10:00:03.597889
+Starting Multithreading to get Battle logs
+--- 114.35409307479858 seconds ---
+Old Data Size: 31670
+New Data Size: 38365
 =============================
 
