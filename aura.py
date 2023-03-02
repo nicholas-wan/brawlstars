@@ -20,14 +20,14 @@ from pl_mapping_dict import mapping_dict
 
 warnings.filterwarnings("ignore")
 
-c9_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=1839516291'
+c9_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=480066675'
 c9_brawlers_csv = 'output/c9/c9aurac_brawler_levels.csv'
 c9_csv_output = 'output/c9/c9aurac_full_stats.png'
 c9_output = './output/c9/c9aurac_brawler_levels_team.xlsx'
 c9_team_averages_png = './output/c9/c9_team_averages.png'
 c9_barchart = './output/c9/c9_barchart.jpg'
 
-c6_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=233369826'
+c6_sheet = 'https://docs.google.com/spreadsheets/d/10PciVdfZCxNesRQEBSfdrC9E9zx_t1ZCrJUVtyEaiZ0/gviz/tq?tqx=out:csv&gid=1947690279'
 c6_brawlers_csv = 'output/c6/c6aurac_brawler_levels.csv'
 c6_csv_output = 'output/c6/c6aurac_full_stats.png'
 c6_output = './output/c6/c6aurac_brawler_levels_team.xlsx'
@@ -108,7 +108,6 @@ def truncate_brawlers(s, truncate_brawlers_num):
 
 def read_csv(gsheet_url, brawler_levels_csv, output, clubname, color_scheme, truncate_brawlers_num=12):
     df = pd.read_csv(gsheet_url, usecols=[1,2])
-    df = df.iloc[1:]
     df.columns=['player','team']
     df = df.dropna(subset=['team'])
     df['player'] = df['player'].map(clean_string)

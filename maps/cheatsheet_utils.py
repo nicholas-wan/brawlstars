@@ -312,7 +312,7 @@ def df_to_png(df, output_png):
     if 'infographics1.png' in output_png:
         img = Image.open(output_png)
         w, h = img.size
-        img.crop((0,0,w-150,h)).save(output_png)
+        img.crop((0,0,w-130,h)).save(output_png)
 
     os.remove(html_file)
     print('Complete, image saved to:', output_png)

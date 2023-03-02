@@ -195,7 +195,10 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
                     'Avg 11s': round(sum(res['level_11s'])/len(res),1),
                     'Stddev 11s': round(statistics.stdev(res['level_11s']),2)
                     }
-        stats_dict['Avg PL Rank'] = mapping_dict[int(stats_dict['Avg PL Score'])]
+        try:
+            stats_dict['Avg PL Rank'] = mapping_dict[int(stats_dict['Avg PL Score'])]
+        except:
+            stats_dict['Avg PL Rank'] = 0
 
     else:
         stats_dict = {'Club': club.name,

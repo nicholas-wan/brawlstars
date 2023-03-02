@@ -80,12 +80,7 @@ def get_brawler_name(team_data, player_tag):
 battles_df = battles_df.dropna(subset=['battle.teams','event.map'])
 battles_df['brawler_name']  = battles_df.apply(lambda x: get_brawler_name(x['battle.teams'], x['player_tag']), axis=1)
 
-pl_maps = [ 'Hard Rock Mine', 'Double Swoosh', 'Crystal Arcade',
-            'Pinhole Punt', 'Sneaky Fields', 'Super Beach',
-            'Safe Zone', 'Bridge Too Far', 'Pit Stop',
-            'Shooting Star','Layer Cake','Canal Grande',
-            'Dueling Beetles',  'Ring of Fire', 'Open Zone', 
-            'Goldarm Gulch', 'Belles Rock','Out in the Open']
+pl_maps = pd.read_csv('maps/maps.csv')['map'].tolist()
 battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("'",''))
 battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
 battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
@@ -93,12 +88,17 @@ battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
 battles_df['battle_time'] = battles_df['battle_time'].map(lambda x: x.strftime("%m/%d/%Y %H:%M:%S"))
 battles_df = battles_df[['battle_time','event.map','battle.result','player_tag','brawler_name']]
 
-old = pd.read_csv('battle_logs/battle_logs.csv')
-print('Old Data Size:', len(old))
-battles_df = pd.concat([battles_df, old]).drop_duplicates().reset_index(drop=True)
-battles_df.to_csv('battle_logs/battle_logs.csv', index=False)
-print('New Data Size:', len(battles_df))
+if os.path.exists('battle_logs/battle_logs.csv'):
+    old = pd.read_csv('battle_logs/battle_logs.csv')
+    print('Old Data Size:', len(old))
+    battles_df = pd.concat([battles_df, old]).drop_duplicates().reset_index(drop=True)
+    print('New Data Size:', len(battles_df))
 
+# Minimum time of new map
+battles_df = battles_df[battles_df['battle_time']>='02/28/2023 17:46:59']
+battles_df.to_csv('battle_logs/battle_logs.csv', index=False)
+
+battles_df = pd.read_csv('battle_logs/battle_logs.csv')
 maps = []
 
 for map_name in pl_maps:
@@ -111,7 +111,6 @@ for map_name in pl_maps:
         win_rate = victories / len(temp_df2)
         use_rate = len(temp_df2) / len(temp_df)
         brawlers.append([brawler, win_rate, use_rate])
-
     brawlers = sorted(brawlers, key = lambda x: (-x[2], -x[1]))[:12]
     best_brawlers = ', '.join([str.lower(i[0]).replace("'",'') for i in brawlers])
     win_rates = [i[1] for i in brawlers]
@@ -122,7 +121,7 @@ for map_name in pl_maps:
 
 res = pd.DataFrame(maps)
 
-reference = pd.read_csv('maps/brawlers.csv')[['gamemodes','map']]
+reference = pd.read_csv('maps/maps.csv')[['gamemodes','map']]
 reference['map'] = reference['map'].map(lambda x: str.lower(x))
 res = res.merge(reference, on='map')
 res['gamemodes'] = res['gamemodes'].map(lambda x: str.lower(x))
