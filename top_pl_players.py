@@ -7,13 +7,14 @@ from bs4 import BeautifulSoup
 import json
 from tqdm import tqdm 
 from multiprocessing.dummy import Pool as ThreadPool 
-from datetime import datetime
+import datetime
 
 print('=============================')
-now = datetime.now() 
+now = datetime.datetime.now() 
 print("Current Time", now)
 
 refresh_playertags = 'yes'
+download_battles = 'yes'
 
 if refresh_playertags == 'yes':
     def get_df(url, num_players):
@@ -61,44 +62,49 @@ def get_battle_records(player_tag):
     except:
         pass
 
-pool = ThreadPool(4) 
-start_time = time.time()
-print('Starting Multithreading to get Battle logs')
-df_list = pool.map(get_battle_records, list(best_players_df['player_tag']))
-print("--- %s seconds ---" % (time.time() - start_time))
-
-battles_df = pd.concat(df_list)
-
-def get_brawler_name(team_data, player_tag):
-    for player in team_data[0]:
-        if player['tag'].replace('#','')==player_tag:
-            return player['brawler']['name']
-    for player in team_data[1]:
-        if player['tag'].replace('#','')==player_tag:
-            return player['brawler']['name']
-
-battles_df = battles_df.dropna(subset=['battle.teams','event.map'])
-battles_df['brawler_name']  = battles_df.apply(lambda x: get_brawler_name(x['battle.teams'], x['player_tag']), axis=1)
-
 pl_maps = pd.read_csv('maps/maps.csv')['map'].tolist()
-battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("'",''))
-battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
-battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
-battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
-battles_df['battle_time'] = battles_df['battle_time'].map(lambda x: x.strftime("%m/%d/%Y %H:%M:%S"))
-battles_df = battles_df[['battle_time','event.map','battle.result','player_tag','brawler_name']]
 
-if os.path.exists('battle_logs/battle_logs.csv'):
-    old = pd.read_csv('battle_logs/battle_logs.csv')
-    print('Old Data Size:', len(old))
-    battles_df = pd.concat([battles_df, old]).drop_duplicates().reset_index(drop=True)
-    print('New Data Size:', len(battles_df))
+if download_battles=='yes':
+    pool = ThreadPool(4) 
+    start_time = time.time()
+    print('Starting Multithreading to get Battle logs')
+    df_list = pool.map(get_battle_records, list(best_players_df['player_tag']))
+    print("--- %s seconds ---" % (time.time() - start_time))
 
-# Minimum time of new map
-battles_df = battles_df[battles_df['battle_time']>='02/28/2023 17:46:59']
-battles_df.to_csv('battle_logs/battle_logs.csv', index=False)
+    battles_df = pd.concat(df_list)
+
+    def get_brawler_name(team_data, player_tag):
+        for player in team_data[0]:
+            if player['tag'].replace('#','')==player_tag:
+                return player['brawler']['name']
+        for player in team_data[1]:
+            if player['tag'].replace('#','')==player_tag:
+                return player['brawler']['name']
+
+    battles_df = battles_df.dropna(subset=['battle.teams','event.map'])
+    battles_df['brawler_name']  = battles_df.apply(lambda x: get_brawler_name(x['battle.teams'], x['player_tag']), axis=1)
+
+    battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("'",''))
+    battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
+    battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
+    battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
+    battles_df['battle_time'] = battles_df['battle_time'].map(lambda x: x.strftime("%m/%d/%Y %H:%M:%S"))
+    battles_df = battles_df[['battle_time','event.map','battle.result','player_tag','brawler_name']]
+
+    if os.path.exists('battle_logs/battle_logs.csv'):
+        old = pd.read_csv('battle_logs/battle_logs.csv')
+        print('Old Data Size:', len(old))
+        battles_df = pd.concat([battles_df, old]).drop_duplicates().reset_index(drop=True)
+        print('New Data Size:', len(battles_df))
+
+    # Minimum time of new map
+    battles_df.to_csv('battle_logs/battle_logs.csv', index=False)
 
 battles_df = pd.read_csv('battle_logs/battle_logs.csv')
+print('Total Num Battles:',len(battles_df))
+days_ago = (datetime.datetime.now()-datetime.timedelta(days=7)).strftime('%m/%d/%Y %H:%M:%S')
+battles_df = battles_df[battles_df['battle_time']>=days_ago]
+print("Total Num Battles (Last 7 Days):", days_ago,':', len(battles_df))
 maps = []
 
 for map_name in pl_maps:

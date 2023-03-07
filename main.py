@@ -128,15 +128,16 @@ def get_club_stats(clubtag, truncate_num, include_tens, include_date, savelist, 
         df_list.append(df)
 
     res = pd.concat(df_list).reset_index(drop=True)
-    if args.get_pl_rank:
-        res = get_pl_rank_df(res, clubtag)
-        res['pl_rank'] = res['pl_score'].map(lambda x: mapping_dict[x])
-    
+
     levels = res.apply(pd.Series.value_counts, axis=1)[[9,10,11]].fillna(0)
 
     res['level_9s'], res['level_10s'], res['level_11s'] = levels[9], levels[10], levels[11]
     res = res.fillna(0)
 
+    if args.get_pl_rank:
+        res = get_pl_rank_df(res, clubtag)
+        res['pl_rank'] = res['pl_score'].map(lambda x: mapping_dict[x])
+    
     float_col = res.select_dtypes(include=['float64'])
     for col in float_col.columns.values:
         res[col] = res[col].astype('int64')
