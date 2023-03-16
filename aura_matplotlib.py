@@ -136,7 +136,7 @@ print('[Output] '+c9_output)
 df1, na1  = read_csv(c9_sheet, c9_brawlers_csv, c9_output, 'C9', color_scheme)
 df1 = df1.drop(columns=['brawlers_11'], axis=1)
 df1 = df1.fillna('')
-dfi.export(df1.style.hide_index(), c9_csv_output)
+dfi.export(df1.style.hide_index(), c9_csv_output, table_conversion='matplotlib')
 print('[Output] '+c9_csv_output)
 
 team_q_standard = """
@@ -170,7 +170,7 @@ color_scheme2 = ["#072094", "#BBC3E8"]
 df2, na2 = read_csv(c6_sheet, c6_brawlers_csv, c6_output, 'C6', color_scheme2)
 df2 = df2.drop(columns=['brawlers_11'], axis=1)
 df2 = df2.fillna('')
-dfi.export(df2.style.hide_index(), c6_csv_output)
+dfi.export(df2.style.hide_index(), c6_csv_output,  table_conversion='matplotlib')
 
 print('[Output] '+c6_output)
 print('[Output] '+c6_csv_output)
@@ -204,10 +204,10 @@ print('[Output] '+c6_barchart)
 
 print('----- Converting to PNG -----')
 
-dfi.export(team1.style.hide_index(), c9_team_averages_png)
+dfi.export(team1.style.hide_index(), c9_team_averages_png,  table_conversion='matplotlib')
 print('[Output] '+c9_team_averages_png)
 
-dfi.export(team2.style.hide_index(), c6_team_averages_png)
+dfi.export(team2.style.hide_index(), c6_team_averages_png,  table_conversion='matplotlib')
 print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
@@ -215,8 +215,8 @@ cols_to_round = ['Avg 9s', 'Avg 9s','Avg 10s','Avg 11s','Stddev 11s','Avg PL Sco
 for col in cols_to_round:
     comparison_df[col] = comparison_df[col].astype(str)
 
-dfi.export(comparison_df.style.hide_index(),comparison_c6_png)
-dfi.export(comparison_df.style.hide_index(),comparison_c9_png)
+dfi.export(comparison_df.style.hide_index(),comparison_c6_png,  table_conversion='matplotlib')
+dfi.export(comparison_df.style.hide_index(),comparison_c9_png,  table_conversion='matplotlib')
 
 print('[Output] '+c9_team_averages_png)
 print('[Output] '+c6_team_averages_png)
