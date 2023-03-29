@@ -28,7 +28,8 @@ if refresh_playertags == 'yes':
         return df
 
     gsheet_url='https://docs.google.com/spreadsheets/d/10eVCxmE2XDpqlbBOR5hKI_wlZDtTmKbCt48v8RCy-iM/gviz/tq?tqx=out:csv&gid=32930413'
-    best_countries_df = pd.read_csv(gsheet_url, usecols=['url','num_players'])
+    # best_countries_df = pd.read_csv(gsheet_url, usecols=['url','num_players'])
+    best_countries_df = pd.read_csv('battle_logs/Team Power League Drafts - Top Players.csv')
 
     countries = []
     for i in tqdm(range(len(best_countries_df))):
