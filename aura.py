@@ -136,7 +136,7 @@ print('[Output] '+c9_output)
 df1, na1  = read_csv(c9_sheet, c9_brawlers_csv, c9_output, 'C9', color_scheme)
 df1 = df1.drop(columns=['brawlers_11'], axis=1)
 df1 = df1.fillna('')
-dfi.export(df1.style.hide_index(), c9_csv_output, fontsize=3.8, dpi=800,)
+dfi.export(df1.style.hide_index(), c9_csv_output, fontsize=3.8, dpi=800)
 print('[Output] '+c9_csv_output)
 
 team_q_standard = """
@@ -203,11 +203,10 @@ print('[Output] '+c6_barchart)
 
 
 print('----- Converting to PNG -----')
-
-dfi.export(team1.style.hide_index(), c9_team_averages_png)
+dfi.export(team1.style.hide_index(), c9_team_averages_png, fontsize=3.8, dpi=800)
 print('[Output] '+c9_team_averages_png)
 
-dfi.export(team2.style.hide_index(), c6_team_averages_png)
+dfi.export(team2.style.hide_index(), c6_team_averages_png, fontsize=3.8, dpi=800)
 print('[Output] '+c6_team_averages_png)
 
 comparison_df = pd.read_csv(comparison)
@@ -215,8 +214,8 @@ cols_to_round = ['Avg 9s', 'Avg 9s','Avg 10s','Avg 11s','Stddev 11s','Avg PL Sco
 for col in cols_to_round:
     comparison_df[col] = comparison_df[col].astype(str)
 
-dfi.export(comparison_df.style.hide_index(),comparison_c6_png)
-dfi.export(comparison_df.style.hide_index(),comparison_c9_png)
+dfi.export(comparison_df.style.hide_index(),comparison_c6_png, fontsize=3.8, dpi=800)
+dfi.export(comparison_df.style.hide_index(),comparison_c9_png, fontsize=3.8, dpi=800)
 
 print('[Output] '+c9_team_averages_png)
 print('[Output] '+c6_team_averages_png)
