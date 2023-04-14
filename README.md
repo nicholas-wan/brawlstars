@@ -85,12 +85,12 @@ Outputs infographics in `/output/infographics`
 
 #### 2.2.1 Generate Infographics Sample Output
 
-<img src="./output/infographics/infographics2.png" width="600" />
-<img src="./output/infographics/infographics3.png" width="600" />
+<img src="./output/infographics/global_infographics2.png" width="600" />
+<img src="./output/infographics/global_infographics3.png" width="600" />
 
 Shows the best brawlers for all <b> 18 Power / Club League </b> maps in two single images. Useful for anyone during drafting phase for Picks and Bans. Shown in order of USAGE RATES.
 
-<img src="./output/infographics/infographics1.png" width="600" />
+<img src="./output/infographics/global_infographics1.png" width="600" />
 
 Aggregates the brawler win rates for all <b> 18 Power / Club League </b> and lists out the overall best brawlers to invest in. `freq` refers to how often the brawler is a top-12 win-rate brawler in a particular map, while `weighted_score` considers the position as well as the frequency.
 
