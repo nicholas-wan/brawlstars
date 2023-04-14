@@ -16,6 +16,10 @@ print("Current Time", now)
 refresh_playertags = 'yes'
 download_battles = 'yes'
 
+################################
+### Download Best Playertags ###
+################################
+
 if refresh_playertags == 'yes':
     def get_df(url, num_players):
         r = requests.get(url)
@@ -27,17 +31,38 @@ if refresh_playertags == 'yes':
         df = df[['Name','player_tag']]
         return df
 
-    gsheet_url='https://docs.google.com/spreadsheets/d/10eVCxmE2XDpqlbBOR5hKI_wlZDtTmKbCt48v8RCy-iM/gviz/tq?tqx=out:csv&gid=32930413'
     # best_countries_df = pd.read_csv(gsheet_url, usecols=['url','num_players'])
-    best_countries_df = pd.read_csv('battle_logs/Team Power League Drafts - Top Players.csv')
+    # Global
+    best_countries_df = pd.read_csv('battle_logs/Team Power League Drafts - Top Players.csv')[['url','num_players']]
+    best_countries_regional_df  = pd.read_csv('battle_logs/Team Power League Drafts - Top Players (Regional).csv')[['url','num_players']]
 
-    countries = []
-    for i in tqdm(range(len(best_countries_df))):
-        countries.append(get_df(best_countries_df.iloc[i]['url'], best_countries_df.iloc[i]['num_players']))
-    best_players_df = pd.concat(countries).drop_duplicates().reset_index(drop=True)
+    def get_top_players(df, label):
+        countries = []
+        for i in tqdm(range(len(df))):
+            countries.append(get_df(df.iloc[i]['url'], df.iloc[i]['num_players']))
+        res = pd.concat(countries).drop_duplicates().reset_index(drop=True)
+        return res 
+
+    global_df = get_top_players(best_countries_df, 'global')       
+    regional_df = get_top_players(best_countries_regional_df, 'regional')
+
+    g = set(global_df['player_tag'])
+    r = set(regional_df['player_tag'])
+
+    best_players_df = pd.concat([global_df, regional_df])[['Name','player_tag']].drop_duplicates()
+    best_players_df['global'] = best_players_df['player_tag'].map(lambda x: 1 if x in g else 0)
+    best_players_df['regional'] = best_players_df['player_tag'].map(lambda x: 1 if x in r else 0)
+
     best_players_df.to_csv('output/best_pl_players.csv', index=False)
+
 else:
     best_players_df = pd.read_csv('output/best_pl_players.csv')
+    g = set(df[df['global']==1]['player_tag'])
+    r = set(df[df['regional']==1]['player_tag'])
+
+############################
+### Download Battle Logs ###
+############################
 
 api_key = "api_key.txt"
 # Insert your Brawl Stars Developer's API Key into a file in the same directory 'api_key.txt'
@@ -99,38 +124,53 @@ if download_battles=='yes':
         print('New Data Size:', len(battles_df))
 
     # Minimum time of new map
+    battles_df['global'] = battles_df['player_tag'].map(lambda x: 1 if x in g else 0)
+    battles_df['regional'] = battles_df['player_tag'].map(lambda x: 1 if x in r else 0)
     battles_df.to_csv('battle_logs/battle_logs.csv', index=False)
 
+#############################
+### Generate Infographics ###
+#############################
+
 battles_df = pd.read_csv('battle_logs/battle_logs.csv')
+
+def prepare_stats(battles_df, label):
+    battles_df = battles_df[battles_df[label]==1].reset_index(drop=True)
+    maps = []
+
+    for map_name in pl_maps:
+        temp_df = battles_df[battles_df['event.map']==map_name]
+        brawlers = []
+        unique_brawlers = set(temp_df['brawler_name'])
+        for brawler in unique_brawlers:
+            temp_df2 = temp_df[temp_df['brawler_name']==brawler]
+            victories = len(temp_df2[temp_df2['battle.result']=='victory'])
+            win_rate = victories / len(temp_df2)
+            use_rate = len(temp_df2) / len(temp_df)
+            brawlers.append([brawler, win_rate, use_rate])
+        brawlers = sorted(brawlers, key = lambda x: (-x[2], -x[1]))[:12]
+        best_brawlers = ', '.join([str.lower(i[0]).replace("'",'') for i in brawlers])
+        win_rates = [i[1] for i in brawlers]
+        use_rates = [i[2] for i in brawlers]
+        win_rates = ', '.join([str(round(i*100,2))+'%' for i in win_rates])
+        use_rates = ', '.join([str(round(i*100))+'%' for i in use_rates])
+        maps.append({'map':str.lower(map_name), 'best_brawlers':best_brawlers,'win_rates':win_rates,'use_rates':use_rates, 'num_battles':len(temp_df), 'num_brawlers':len(unique_brawlers)})
+
+    res = pd.DataFrame(maps)
+
+    reference = pd.read_csv('maps/maps.csv')[['gamemodes','map']]
+    reference['map'] = reference['map'].map(lambda x: str.lower(x))
+    res = res.merge(reference, on='map')
+    res['gamemodes'] = res['gamemodes'].map(lambda x: str.lower(x))
+    res['label']=label
+    return res 
 print('Total Num Battles:',len(battles_df))
 days_ago = (datetime.datetime.now()-datetime.timedelta(days=7)).strftime('%m/%d/%Y %H:%M:%S')
 battles_df = battles_df[battles_df['battle_time']>=days_ago]
 print("Total Num Battles (Last 7 Days):", days_ago,':', len(battles_df))
-maps = []
 
-for map_name in pl_maps:
-    temp_df = battles_df[battles_df['event.map']==map_name]
-    brawlers = []
-    unique_brawlers = set(temp_df['brawler_name'])
-    for brawler in unique_brawlers:
-        temp_df2 = temp_df[temp_df['brawler_name']==brawler]
-        victories = len(temp_df2[temp_df2['battle.result']=='victory'])
-        win_rate = victories / len(temp_df2)
-        use_rate = len(temp_df2) / len(temp_df)
-        brawlers.append([brawler, win_rate, use_rate])
-    brawlers = sorted(brawlers, key = lambda x: (-x[2], -x[1]))[:12]
-    best_brawlers = ', '.join([str.lower(i[0]).replace("'",'') for i in brawlers])
-    win_rates = [i[1] for i in brawlers]
-    use_rates = [i[2] for i in brawlers]
-    win_rates = ', '.join([str(round(i*100,2))+'%' for i in win_rates])
-    use_rates = ', '.join([str(round(i*100))+'%' for i in use_rates])
-    maps.append({'map':str.lower(map_name), 'best_brawlers':best_brawlers,'win_rates':win_rates,'use_rates':use_rates, 'num_battles':len(temp_df), 'num_brawlers':len(unique_brawlers)})
+global_battles_df = prepare_stats(battles_df, 'global')
+regional_battles_df = prepare_stats(battles_df, 'regional')
+res = pd.concat([global_battles_df, regional_battles_df]).reset_index(drop=True)
+res.to_csv('maps/pro_battles.csv',index=False)
 
-res = pd.DataFrame(maps)
-
-reference = pd.read_csv('maps/maps.csv')[['gamemodes','map']]
-reference['map'] = reference['map'].map(lambda x: str.lower(x))
-res = res.merge(reference, on='map')
-res['gamemodes'] = res['gamemodes'].map(lambda x: str.lower(x))
-res.to_csv('maps/pro_battles.csv', index=False)
-print('=============================\n')

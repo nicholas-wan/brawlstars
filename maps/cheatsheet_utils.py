@@ -87,8 +87,10 @@ def filter_brawler_df(num_best_brawlers = 12):
 
     return df
     
-def get_best_brawlers(num_best_brawlers):
-    df = filter_brawler_df()[['best_brawlers']]
+def get_best_brawlers(num_best_brawlers, label):
+    df = filter_brawler_df()
+    df = df[df['label']==label].reset_index(drop=True)
+    df = df[['best_brawlers']]
     df['best_brawlers'] = df['best_brawlers'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
     df['best_brawlers'] = df['best_brawlers'].map(clean_brawlers_string)
 
@@ -180,8 +182,9 @@ def get_best_brawlers(num_best_brawlers):
 
     return df4
 
-def get_best_brawlers_map(num_best_brawlers):
+def get_best_brawlers_map(num_best_brawlers, label):
     df = filter_brawler_df()
+    df = df[df['label']==label].reset_index(drop=True)
     df['best_brawlers'] = df['best_brawlers'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
     df['win_rates'] = df['win_rates'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
     df['use_rates'] = df['use_rates'].map(lambda x: ', '.join(x.split(', ')[:num_best_brawlers]))
@@ -345,3 +348,36 @@ def copyright_apply(input_image_path,
     photo.paste(c_text, pos, c_text)
     photo.save(output_image_path)
     
+def add_margin(pil_img, top, right, bottom, left, color):
+    width, height = pil_img.size
+    new_width = width + right + left
+    new_height = height + top + bottom
+    result = Image.new(pil_img.mode, (new_width, new_height), color)
+    result.paste(pil_img, (left, top))
+    return result
+
+def pad_add_text(image_path, margin, font_size, text_y, text_value, output_path, color, border_size):
+    im = Image.open(image_path)
+    im = add_margin(im, margin[0], margin[1], margin[2], margin[3], 'white')
+    im = add_margin(im, border_size, border_size, border_size, border_size, color)
+    
+    W, H = im.size
+    draw = ImageDraw.Draw(im)
+    font = ImageFont.truetype('font/OpenSans-Bold.ttf', font_size)
+    w, h = draw.textsize(text_value, font=font)
+
+    draw.text(((W-w)/2, text_y), text_value, fill="black", font=font)
+    im.save(output_path)
+    print('[Format]', output_path)
+
+def add_image(img1_path, img2_path, y_coord, resize_factor):
+    img1 = Image.open(img1_path)
+    img2 = Image.open(img2_path).convert("RGBA")
+    
+    if resize_factor!=1:
+        width, height = img2.size
+        img2 = img2.resize((int(width//resize_factor), int(height//resize_factor)))
+    
+    img1.paste(img2, (img1.size[0]-img2.size[0]-int(0.03*img1.size[0]), y_coord), mask = img2)
+    img1.save(img1_path)
+
