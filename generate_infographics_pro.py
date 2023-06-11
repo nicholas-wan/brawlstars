@@ -13,9 +13,9 @@ from cheatsheet_utils import *
 ### Params ###
 ##############
 
-map_csv = os.path.join(project_directory, 'maps/maps.csv')
-brawler_data_csv = os.path.join(project_directory, 'maps/pro_battles.csv')
-infographics_output_folder = os.path.join(project_directory, 'output/infographics')
+map_csv = os.path.join(project_directory, 'maps','maps.csv')
+brawler_data_csv = os.path.join(project_directory, 'maps','pro_battles.csv')
+infographics_output_folder = os.path.join(project_directory, 'output','infographics')
 
 ############
 ### Main ###

@@ -61,7 +61,7 @@ def nth_repl(s, sub, repl, n):
         return s
 
 def path_to_image_html(path, width='30'):
-    return '<img src="'+ path + '" width="{}" >'.format(width)
+    return '<img src="file:///'+ path + '" width="{}" >'.format(width)
 
 def filter_brawler_df(num_best_brawlers = 12):
     df = pd.read_csv(brawler_data_csv)
