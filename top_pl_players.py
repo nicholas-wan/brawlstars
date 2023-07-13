@@ -57,8 +57,8 @@ if refresh_playertags == 'yes':
 
 else:
     best_players_df = pd.read_csv('output/best_pl_players.csv')
-    g = set(df[df['global']==1]['player_tag'])
-    r = set(df[df['regional']==1]['player_tag'])
+    g = set(best_players_df[best_players_df['global']==1]['player_tag'])
+    r = set(best_players_df[best_players_df['regional']==1]['player_tag'])
 
 ############################
 ### Download Battle Logs ###
@@ -89,6 +89,7 @@ def get_battle_records(player_tag):
         pass
 
 pl_maps = pd.read_csv('maps/maps.csv')['map'].tolist()
+pl_maps = [x.replace('\'','') for x in pl_maps]
 
 if download_battles=='yes':
     pool = ThreadPool(4) 
@@ -110,7 +111,8 @@ if download_battles=='yes':
     battles_df = battles_df.dropna(subset=['battle.teams','event.map'])
     battles_df['brawler_name']  = battles_df.apply(lambda x: get_brawler_name(x['battle.teams'], x['player_tag']), axis=1)
 
-    battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("'",''))
+    battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("\'",''))
+    # print(battles_df['event.map'].value_counts())
     battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
     battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
     battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
@@ -139,7 +141,7 @@ def prepare_stats(battles_df, label):
     maps = []
 
     for map_name in pl_maps:
-        temp_df = battles_df[battles_df['event.map']==map_name]
+        temp_df = battles_df[battles_df['event.map']==map_name.replace('\'','')]
         brawlers = []
         unique_brawlers = set(temp_df['brawler_name'])
         for brawler in unique_brawlers:

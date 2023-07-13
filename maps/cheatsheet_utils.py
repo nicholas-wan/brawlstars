@@ -124,8 +124,8 @@ def get_best_brawlers(num_best_brawlers, label):
     df2 = pd.DataFrame.from_dict([brawlers]).T.reset_index()
     df2 = print_dataframe(df2)
 
-    def get_best_maps():
-        df = pd.read_csv(brawler_data_csv)[['map','best_brawlers','win_rates']]
+    def get_best_maps(label):
+        df = pd.read_csv(brawler_data_csv)[['map','best_brawlers','win_rates','label']]
         df['best_brawlers'] = df['best_brawlers'].map(clean_brawlers_string)
         df['best_brawlers'] = df['best_brawlers'].str.split(', ')
         df['win_rates'] = df['win_rates'].str.split(', ')
@@ -134,12 +134,14 @@ def get_best_brawlers(num_best_brawlers, label):
         brawler_map_dict = {}
         for brawler in brawler_set:
             best_maps = []
+            df = df[df['label']==label]
             for i in range(len(df)):
                 best_brawlers = df.iloc[i]['best_brawlers']
                 win_rates = df.iloc[i]['win_rates']
                 mapname = df.iloc[i]['map']
                 if brawler in best_brawlers:
                     best_maps.append([mapname, win_rates[best_brawlers.index(brawler)]])
+
             brawler_map_dict[brawler] = best_maps
 
         brawler_map_dict
@@ -151,7 +153,7 @@ def get_best_brawlers(num_best_brawlers, label):
         df['brawlers'] = df['brawlers'].map(lambda x: images[x])
         return df
 
-    best_maps = get_best_maps()
+    best_maps = get_best_maps(label)
     df3 = df.merge(df2, on=['brawlers']).head(num_best_brawlers)
     df4 = df3.merge(best_maps, on=['brawlers'])
 
