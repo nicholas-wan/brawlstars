@@ -22,3 +22,39 @@ Old Data Size: 92930
 New Data Size: 96923
 Total Num Battles: 96923
 Total Num Battles (Last 7 Days): 07/06/2023 17:14:59 : 40819
+=============================
+Current Time 2023-07-13 22:00:04.389976
+=============================
+Current Time 2023-07-13 22:00:55.926581
+Starting Multithreading to get Battle logs
+--- 146.18037581443787 seconds ---
+Old Data Size: 99464
+New Data Size: 99861
+Total Num Battles: 99861
+Total Num Battles (Last 7 Days): 07/06/2023 22:04:01 : 43732
+=============================
+Current Time 2023-07-16 22:47:36.229433
+=============================
+Current Time 2023-07-16 22:49:00.361492
+Starting Multithreading to get Battle logs
+--- 158.26312017440796 seconds ---
+Old Data Size: 99861
+New Data Size: 105909
+Total Num Battles: 105909
+Total Num Battles (Last 7 Days): 07/09/2023 22:52:18 : 48297
+=============================
+Current Time 2023-07-17 22:00:07.336296
+Starting Multithreading to get Battle logs
+--- 150.8891270160675 seconds ---
+Old Data Size: 105909
+New Data Size: 122801
+Total Num Battles: 122801
+Total Num Battles (Last 7 Days): 07/10/2023 22:03:20 : 64382
+=============================
+Current Time 2023-07-19 22:00:06.916641
+Starting Multithreading to get Battle logs
+--- 211.60418796539307 seconds ---
+Old Data Size: 122801
+New Data Size: 137296
+Total Num Battles: 137296
+Total Num Battles (Last 7 Days): 07/12/2023 22:04:30 : 66447
