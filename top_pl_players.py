@@ -113,6 +113,7 @@ if download_battles=='yes':
 
     battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("\'",''))
     # print(battles_df['event.map'].value_counts())
+    battles_df_original = battles_df.copy()
     battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
     battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
     battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
@@ -161,6 +162,7 @@ def prepare_stats(battles_df, label):
     res = pd.DataFrame(maps)
 
     reference = pd.read_csv('maps/maps.csv')[['gamemodes','map']]
+    reference['map'] = reference['map'].map(lambda x: x.replace("\'",''))
     reference['map'] = reference['map'].map(lambda x: str.lower(x))
     res = res.merge(reference, on='map')
     res['gamemodes'] = res['gamemodes'].map(lambda x: str.lower(x))
