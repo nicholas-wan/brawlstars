@@ -32,6 +32,7 @@ if refresh_playertags == 'yes':
         html_table = BeautifulSoup(r.text, features="lxml")#.find('table')
         r.close()
         df = pd.read_html(str(html_table), header=0)[0].head(num_players)
+        num_players = min(len(df), num_players)
         df['Link'] = [link.get('href') for link in html_table.find_all('a')][:num_players]
         df['player_tag'] = df['Link'].map(lambda x: x.split('%')[-1][2:])
         df = df[['Name','player_tag']]

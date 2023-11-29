@@ -1,7 +1,7 @@
 # 1. Installation 
 #### 1.1 Software
 - Download `Anaconda3` from https://www.anaconda.com/products/distribution. Install with all the default paths. <b>*Important*</b> make sure to select add conda to PATH
-- Download `Chromedriver` from https://chromedriver.chromium.org/getting-started. Ensure it matches your Google Chrome version. Recommended to update google chrome to latest version as well.
+- Download `Chromedriver` from https://chromedriver.chromium.org/getting-started. Ensure it matches your Google Chrome version. Recommended to update google chrome to latest version as well. Put chromedriver in the same path as this file.
 - Create a `Github` account https://www.github.com/ 
 - Install `git` for windows from https://git-scm.com/download/win 
 - Install `wkhtmltopdf` from https://wkhtmltopdf.org/downloads.html. Add `/wkhtmltopdf/bin` to PATH in your environment variables (e.g `C:\Program Files\wkhtmltopdf\bin`)
