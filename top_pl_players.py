@@ -22,8 +22,14 @@ download_battles = 'yes'
 
 if refresh_playertags == 'yes':
     def get_df(url, num_players):
-        r = requests.get(url)
-        html_table = BeautifulSoup(r.text, features="lxml").find('table')
+
+        headers = requests.utils.default_headers()
+        headers.update({
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
+        })
+
+        r = requests.get(url, headers=headers)
+        html_table = BeautifulSoup(r.text, features="lxml")#.find('table')
         r.close()
         df = pd.read_html(str(html_table), header=0)[0].head(num_players)
         df['Link'] = [link.get('href') for link in html_table.find_all('a')][:num_players]
