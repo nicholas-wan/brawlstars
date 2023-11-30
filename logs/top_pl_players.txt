@@ -84,3 +84,11 @@ Old Data Size: 189543
 New Data Size: 207693
 Total Num Battles: 207693
 Total Num Battles (Last 7 Days): 08/05/2023 10:35:44 : 35040
+=============================
+Current Time 2023-11-30 16:19:59.340401
+Starting Multithreading to get Battle logs
+--- 62.65257143974304 seconds ---
+Old Data Size: 6903
+New Data Size: 13977
+Total Num Battles: 13977
+Total Num Battles (Last 7 Days): 11/23/2023 16:21:42 : 13586

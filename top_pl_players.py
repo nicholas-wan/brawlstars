@@ -182,6 +182,6 @@ print("Total Num Battles (Last 7 Days):", days_ago,':', len(battles_df))
 
 global_battles_df = prepare_stats(battles_df, 'global')
 regional_battles_df = prepare_stats(battles_df, 'regional')
-res = pd.concat([global_battles_df, regional_battles_df]).reset_index(drop=True)
+res = pd.concat([global_battles_df, regional_battles_df]).dropna(subset=['best_brawlers']).reset_index(drop=True)
 res.to_csv('maps/pro_battles.csv',index=False)
 
