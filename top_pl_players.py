@@ -95,8 +95,10 @@ def get_battle_records(player_tag):
     except:
         pass
 
-pl_maps = pd.read_csv('maps/maps.csv')['map'].tolist()
-pl_maps = [x.replace('\'','') for x in pl_maps]
+pl_maps = pd.read_csv('maps/maps.csv')['map']
+pl_maps = [x.replace('\'','').lower() for x in pl_maps.tolist()]
+print(pl_maps)
+
 
 if download_battles=='yes':
     pool = ThreadPool(4) 
@@ -119,8 +121,9 @@ if download_battles=='yes':
     battles_df['brawler_name']  = battles_df.apply(lambda x: get_brawler_name(x['battle.teams'], x['player_tag']), axis=1)
 
     battles_df['event.map'] = battles_df['event.map'].map(lambda x: x.replace("\'",''))
-    # print(battles_df['event.map'].value_counts())
+    print(battles_df['event.map'].value_counts())
     battles_df_original = battles_df.copy()
+    battles_df['event.map']=battles_df['event.map'].map(lambda x: x.lower())
     battles_df = battles_df[battles_df['event.map'].isin(pl_maps)]
     battles_df = battles_df.sort_values(['event.map','brawler_name','battle.result']).reset_index(drop=True)
     battles_df['battle_time'] = pd.to_datetime(battles_df['battle_time'])
@@ -172,6 +175,8 @@ def prepare_stats(battles_df, label):
     reference['map'] = reference['map'].map(lambda x: x.replace("\'",''))
     reference['map'] = reference['map'].map(lambda x: str.lower(x))
     res = res.merge(reference, on='map')
+    print(res)
+
     res['gamemodes'] = res['gamemodes'].map(lambda x: str.lower(x))
     res['label']=label
     return res 

@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 import argparse
+import shutil
 
 import sys
 project_directory = os.getcwd()
@@ -58,3 +59,11 @@ for i in [1,2,3]:
     pad_add_text(regional_info, [40, 0, 0, 0], 35, 15, "ASIA PACIFIC", regional_info, 'navy', 10)
 
 # add_image(global_info1, './misc_images/masters.png', 2, 8 )
+
+1, 2 , 3
+
+for label in ['global','regional']:
+    shutil.move(os.path.join(infographics_output_folder, label+'_infographics3.png'), os.path.join(infographics_output_folder, label+'_infographics_temp.png'))
+    shutil.move(os.path.join(infographics_output_folder, label+'_infographics1.png'), os.path.join(infographics_output_folder, label+'_infographics3.png'))
+    shutil.move(os.path.join(infographics_output_folder, label+'_infographics2.png'), os.path.join(infographics_output_folder, label+'_infographics1.png'))
+    shutil.move(os.path.join(infographics_output_folder, label+'_infographics_temp.png'), os.path.join(infographics_output_folder, label+'_infographics2.png'))

@@ -92,3 +92,487 @@ Old Data Size: 6903
 New Data Size: 13977
 Total Num Battles: 13977
 Total Num Battles (Last 7 Days): 11/23/2023 16:21:42 : 13586
+=============================
+Current Time 2023-12-05 20:35:15.799013
+=============================
+Current Time 2023-12-05 20:44:04.168596
+Starting Multithreading to get Battle logs
+--- 103.11016750335693 seconds ---
+Old Data Size: 13977
+New Data Size: 18968
+Total Num Battles: 18968
+Total Num Battles (Last 7 Days): 11/28/2023 20:46:12 : 15174
+=============================
+Current Time 2024-01-11 16:04:19.164616
+Starting Multithreading to get Battle logs
+--- 101.28829193115234 seconds ---
+Old Data Size: 18968
+New Data Size: 22170
+Total Num Battles: 22170
+Total Num Battles (Last 7 Days): 01/04/2024 16:06:39 : 22170
+=============================
+Current Time 2024-01-11 23:31:30.747349
+['last stop', 'open space', 'stay in your lane', 'backyard bowl', 'triple dribble', 'winter party', 'bridge too far', 'riverbed', 'tornado ring', 'layer bake', 'shooting star', 'the great open', 'open zone', 'ring of fire', 'the great divide', 'out in the open', 'belles rock', 'close quarters']
+Starting Multithreading to get Battle logs
+--- 85.88162970542908 seconds ---
+Backyard Bowl            865
+Out in the Open          722
+Open Zone                714
+Last Stop                700
+Close Quarters           669
+Triple Dribble           648
+Bridge Too Far           642
+Riverbed                 631
+The Great Open           613
+Layer Bake               610
+The Great Divide         609
+Tornado Ring             602
+Belles Rock              563
+Winter Party             562
+Stay in your Lane        537
+Open Space               521
+Ring of Fire             517
+Shooting Star            503
+Safe Zone                 84
+Hard Rock Mine            74
+Double Swoosh             68
+Goldarm Gulch             62
+Flaring Phoenix            9
+The Galaxy                 8
+Cavern Churn               8
+Skull Creek                7
+Double Trouble             7
+Great waves                7
+Dune Drift                 5
+Waters of Doom             5
+Safety Center              5
+Off the Line               5
+Snake Prairie              4
+Snowman forest             4
+Cold pond quarry           4
+Cool shapes                4
+Healthy Middle Ground      2
+Freezing ripples           2
+Retina                     2
+Slippery road              1
+Stormy Plains              1
+Name: event.map, dtype: int64
+Old Data Size: 45065
+New Data Size: 46264
+Total Num Battles: 46264
+Total Num Battles (Last 7 Days): 01/04/2024 23:33:24 : 46264
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+=============================
+Current Time 2024-01-12 15:06:41.808003
+['last stop', 'open space', 'stay in your lane', 'backyard bowl', 'triple dribble', 'winter party', 'bridge too far', 'riverbed', 'tornado ring', 'layer bake', 'shooting star', 'the great open', 'open zone', 'ring of fire', 'the great divide', 'out in the open', 'belles rock', 'close quarters']
+Starting Multithreading to get Battle logs
+--- 83.1676573753357 seconds ---
+Bridge Too Far           705
+Triple Dribble           700
+Backyard Bowl            699
+Open Zone                641
+Ring of Fire             632
+Tornado Ring             625
+Riverbed                 617
+The Great Divide         616
+Out in the Open          611
+Last Stop                606
+Layer Bake               592
+Stay in your Lane        591
+Winter Party             579
+Belles Rock              563
+Close Quarters           562
+The Great Open           499
+Open Space               486
+Shooting Star            483
+Safe Zone                 78
+Hard Rock Mine            67
+Double Swoosh             59
+Goldarm Gulch             35
+Frosty tracks             12
+Encirclement              10
+Safety Center             10
+Off the Line               9
+Double Trouble             6
+Cold pond quarry           5
+Minecart Madness           5
+Great waves                5
+Galaxy Arena               5
+Cool shapes                4
+Freezing ripples           3
+Flaring Phoenix            3
+Healthy Middle Ground      2
+Waters of Doom             2
+Retina                     2
+The Galaxy                 1
+Icy ice park               1
+Snowman forest             1
+Slippery road              1
+Stormy Plains              1
+Name: event.map, dtype: int64
+Old Data Size: 46264
+New Data Size: 46653
+Total Num Battles: 46653
+Total Num Battles (Last 7 Days): 01/05/2024 15:08:44 : 46527
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+=============================
+Current Time 2024-01-17 13:15:10.589850
+['last stop', 'open space', 'stay in your lane', 'backyard bowl', 'triple dribble', 'winter party', 'bridge too far', 'riverbed', 'tornado ring', 'layer bake', 'shooting star', 'the great open', 'open zone', 'ring of fire', 'the great divide', 'out in the open', 'belles rock', 'close quarters']
+Starting Multithreading to get Battle logs
+--- 81.12791514396667 seconds ---
+Out in the Open          708
+Triple Dribble           679
+Open Zone                637
+The Great Divide         633
+Last Stop                619
+Backyard Bowl            610
+Ring of Fire             594
+Tornado Ring             576
+Winter Party             575
+Shooting Star            563
+Belles Rock              563
+Riverbed                 542
+Bridge Too Far           519
+Stay in your Lane        517
+Close Quarters           510
+Layer Bake               508
+The Great Open           503
+Open Space               472
+Safe Zone                113
+Hard Rock Mine            79
+Double Swoosh             74
+Goldarm Gulch             63
+Waters of Doom            26
+Galaxy Arena              12
+Snake Prairie             12
+Healthy Middle Ground     12
+Off the Line              10
+Encirclement               8
+Flaring Phoenix            8
+Retina                     7
+Coarse Course              7
+Minecart Madness           6
+Snowman forest             6
+Close Call                 6
+Frosty tracks              4
+Great waves                4
+Freezing ripples           4
+Arène en folie             3
+Cool shapes                2
+Icy ice park               2
+New Perspective            2
+Slippery road              1
+Snowflakes                 1
+Name: event.map, dtype: int64
+Old Data Size: 46653
+New Data Size: 52312
+Total Num Battles: 52312
+Total Num Battles (Last 7 Days): 01/10/2024 13:17:10 : 47966
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+=============================
+Current Time 2024-02-04 23:26:24.033959
+=============================
+Current Time 2024-02-05 23:09:56.416487
+=============================
+Current Time 2024-02-05 23:18:04.089394
+['last stop', 'open space', 'stay in your lane', 'backyard bowl', 'triple dribble', 'winter party', 'bridge too far', 'riverbed', 'tornado ring', 'layer bake', 'shooting star', 'the great open', 'open zone', 'ring of fire', 'the great divide', 'out in the open', 'belles rock', 'close quarters']
+Starting Multithreading to get Battle logs
+--- 100.09571194648743 seconds ---
+Backyard Bowl        571
+Open Zone            515
+Last Stop            495
+Ring of Fire         471
+Tornado Ring         465
+Winter Party         457
+The Great Open       453
+Shooting Star        447
+Out in the Open      439
+Belles Rock          439
+Triple Dribble       418
+Stay in your Lane    417
+Bridge Too Far       409
+Layer Bake           397
+Riverbed             391
+Open Space           384
+Close Quarters       345
+The Great Divide     334
+Safe Zone            127
+Goldarm Gulch         90
+Double Swoosh         66
+Hard Rock Mine        65
+Flaring Phoenix       20
+Icy ice park          17
+Minecart Madness      16
+Encirclement          16
+Checkered             10
+Cool shapes            6
+Coarse Course          6
+Great waves            5
+Close Call             4
+New Perspective        2
+Power Shot             2
+Retina                 2
+Freezing ripples       1
+Frosty tracks          1
+Cavern Churn           1
+Slippery road          1
+Name: event.map, dtype: int64
+Old Data Size: 52312
+New Data Size: 59319
+Total Num Battles: 59319
+Total Num Battles (Last 7 Days): 01/29/2024 23:20:08 : 25922
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+=============================
+Current Time 2024-02-08 12:21:39.334581
+['last stop', 'open space', 'stay in your lane', 'backyard bowl', 'triple dribble', 'winter party', 'bridge too far', 'riverbed', 'tornado ring', 'layer bake', 'shooting star', 'the great open', 'open zone', 'ring of fire', 'the great divide', 'out in the open', 'belles rock', 'close quarters']
+Starting Multithreading to get Battle logs
+--- 115.1571671962738 seconds ---
+Backyard Bowl            609
+Ring of Fire             542
+Triple Dribble           523
+Out in the Open          492
+Shooting Star            472
+Open Zone                471
+Tornado Ring             470
+Last Stop                455
+Bridge Too Far           420
+Belles Rock              417
+The Great Open           392
+Winter Party             386
+Open Space               384
+The Great Divide         382
+Riverbed                 370
+Stay in your Lane        368
+Close Quarters           360
+Layer Bake               323
+Double Swoosh            113
+Goldarm Gulch            102
+Hard Rock Mine            95
+Safe Zone                 86
+Minecart Madness          22
+Galaxy Arena              16
+Flaring Phoenix           14
+New Perspective           11
+Encirclement               8
+Great waves                8
+Healthy Middle Ground      3
+Snake Prairie              3
+Checkered                  2
+Coarse Course              2
+Cool shapes                2
+Snowflakes                 2
+Freezing ripples           2
+Retina                     2
+Cold pond quarry           1
+Dune Drift                 1
+Name: event.map, dtype: int64
+Old Data Size: 59319
+New Data Size: 66700
+Total Num Battles: 66700
+Total Num Battles (Last 7 Days): 02/01/2024 12:24:17 : 32788
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
+                  map  ...   gamemodes
+0           last stop  ...    Gem Grab
+1          open space  ...    Gem Grab
+2   stay in your lane  ...    Gem Grab
+3       backyard bowl  ...  Brawl Ball
+4      triple dribble  ...  Brawl Ball
+5        winter party  ...  Brawl Ball
+6      bridge too far  ...       Heist
+7            riverbed  ...       Heist
+8        tornado ring  ...       Heist
+9          layer bake  ...      Bounty
+10      shooting star  ...      Bounty
+11     the great open  ...      Bounty
+12          open zone  ...    Hot Zone
+13       ring of fire  ...    Hot Zone
+14   the great divide  ...    Hot Zone
+15    out in the open  ...    Knockout
+16        belles rock  ...    Knockout
+17     close quarters  ...    Knockout
+
+[18 rows x 7 columns]
